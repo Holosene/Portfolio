@@ -276,7 +276,7 @@ export const projects = [
     link: { label: T('Voir le projet', 'View the project'), href: 'https://github.com/Johann-Ar/Voyageur-1' },
     media: [
       // ordre de l'expérience : l'accueil, le récit, le disque et ses images, une image en volume, la galerie
-      { src: 'voyageur-1/accueil.webp', alt: T('L’accueil du site', 'The site’s home screen') },
+      { src: 'voyageur-1/accueil.webp', dark: 'voyageur-1/accueil-sombre.webp', alt: T('L’accueil du site', 'The site’s home screen') },
       { src: 'voyageur-1/voyageur-recit.mp4', poster: 'voyageur-1/voyageur-recit-poster.webp', alt: T('Le récit en photos d’archives NASA', 'The story in NASA archive photos') },
       { src: 'voyageur-1/recit-2.webp', alt: T('Le récit : le disque fixé sur la sonde', 'The story: the record fixed to the probe'), layout: 'stack' },
       { src: 'voyageur-1/disque.webp', alt: T('Le disque d’or entouré de ses images', 'The Golden Record surrounded by its images'), layout: 'stack' },
