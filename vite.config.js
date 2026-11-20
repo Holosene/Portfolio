@@ -94,7 +94,7 @@ function themeHead() {
       // page en sombre d'emblée (data-theme="dark" dans le HTML : holosene.fr) : fond sombre du site (src/theme.css)
       const bg = /<html[^>]*data-theme="dark"/.test(html) ? '#0D0D0D' : colors.bgLight
       const meta = `<meta name="theme-color" content="${bg}" />`
-      // toujours en clair au chargement (data-theme="light" dans le HTML), sur tous les appareils, quel que soit le mode du
+      // toujours en sombre au chargement (data-theme="dark" dans le HTML, choix de Johann), sur tous les appareils, quel que soit le mode du
       // système ; le bouton Clair / Sombre ne vaut que pour la visite (main.js). Les anciens choix mémorisés par une
       // version précédente du site (theme, site-theme) sont effacés : ils faisaient démarrer certains téléphones en sombre
       const boot = `<script>try{localStorage.removeItem('theme');localStorage.removeItem('site-theme')}catch(e){}try{history.scrollRestoration='manual';var n=performance.getEntriesByType&&performance.getEntriesByType('navigation')[0];if(location.hash&&(!/^#p-/.test(location.hash)||(n&&n.type==='reload')))history.replaceState(null,'',location.pathname+location.search)}catch(e){}</script>`   // + rechargement : toujours l'accueil, en haut (ni position mémorisée, ni ancre, ni fiche ouverte) ; un lien direct vers une fiche #p-… l'ouvre toujours

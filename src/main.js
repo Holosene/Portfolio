@@ -51,7 +51,7 @@ else new IntersectionObserver(([e]) => { if (!root.classList.contains('has-gl') 
 /* Thème. Accueil en clair par défaut ; le bouton de la barre du haut l'inverse. Les fiches projet suivent toujours le
    mode de l'accueil. */
 const applyThemeColor = () => { const f = document.querySelector('.fiche.is-open'); const bg = getComputedStyle(f || root).getPropertyValue('--bg').trim(); document.querySelectorAll('meta[name="theme-color"]').forEach((m) => m.setAttribute('content', bg)) }
-const themeOf = () => root.dataset.theme || 'light'   // accueil et fiches : un seul mode
+const themeOf = () => root.dataset.theme || 'dark'   // accueil et fiches : un seul mode ; sombre par défaut (choix de Johann)
 const themeWord = () => (root.lang === 'en' ? { dark: 'Dark', light: 'Light' } : { dark: 'Sombre', light: 'Clair' })
 const labelThemes = () => document.querySelectorAll('.theme-toggle').forEach((b) => {
   const next = themeOf(b) === 'light' ? 'dark' : 'light'
@@ -61,7 +61,7 @@ document.addEventListener('click', (e) => {
   const b = e.target.closest('.theme-toggle')
   if (!b) return
   const next = themeOf(b) === 'light' ? 'dark' : 'light'
-  root.dataset.theme = next; root.classList.add('theme-chosen')   // pour cette visite seulement : au chargement suivant, accueil clair et fiches sombres
+  root.dataset.theme = next; root.classList.add('theme-chosen')   // pour cette visite seulement : au chargement suivant, de nouveau sombre
   labelThemes(); applyThemeColor(); syncThemedMedia()
 })
 // médias des fiches en deux versions (data-dark : même visuel sur fond sombre) : l'image ou la vidéo suit le mode du
@@ -204,6 +204,8 @@ document.addEventListener('click', (e) => {
    une fiche fermée par le bouton restait donc ciblée (elle se rouvrait, puis plus rien ne répondait). Sans JavaScript,
    :target ouvre la fiche (styles.css). Focus, Échap, focus piégé, défilement de la page bloqué. */
 let lastFocus = null, current = null
+let focusOutside = null   // dernier élément focalisé hors des fiches
+document.addEventListener('focusin', (e) => { if (!e.target.closest?.('.fiche')) focusOutside = e.target })
 const veil = document.querySelector('.fiche-veil')
 const ficheBrand = document.querySelector('.fiche-brand')
 const ficheOf = () => (/^#p-/.test(location.hash) ? document.getElementById(location.hash.slice(1)) : null)
@@ -244,7 +246,9 @@ function syncFiche() {
     open.classList.add('is-open'); phase(open, 'is-entering')
     placeFicheBrand()
     lenis?.stop()
-    lastFocus ??= document.activeElement
+    // élément à qui rendre le focus à la fermeture : celui d'avant l'ouverture (la navigation vers l'ancre #p-… donne
+    // le focus à la fiche, ou le retire du lien, avant que hashchange n'arrive)
+    { const a = document.activeElement; lastFocus ??= !a || a === document.body || a.closest?.('.fiche') ? (focusOutside?.matches?.('a[href^="#p-"]') ? focusOutside : null) : a }
     open.scrollTop = 0
     open.style.setProperty('--fh', open.querySelector('.fiche__head').offsetHeight + 'px')
     fiches.find((x) => x.f === open)?.reset()
@@ -264,7 +268,9 @@ function syncFiche() {
         lenis ? lenis.scrollTo(y, { immediate: true }) : scrollTo(0, y)
       }
     }
-    if (lastFocus) { lastFocus.focus?.({ preventScroll: true }); lastFocus = null }
+    // focus rendu à la vignette d'origine (clavier, lecteur d'écran) ; à l'image suivante : pendant la fermeture, la fiche
+    // garde encore le focus et l'appel immédiat restait sans effet
+    if (lastFocus) { const el = lastFocus; lastFocus = null; requestAnimationFrame(() => { if (!current && el.isConnected) el.focus?.({ preventScroll: true }) }) }
   }
   applyThemeColor()
 }
@@ -393,6 +399,11 @@ const rails = [...document.querySelectorAll('.work__pin')].map((pin) => {
   r.measure = () => {
     ;(pin.closest('.work') || pin).style.setProperty('--track-w', track.clientWidth + 'px')   // largeur des vignettes (styles.css) : centre exact ; posée sur la section : le texte d'en-tête s'aligne sur la vignette
     const shown = originals.filter((c) => c.offsetParent)
+    // moins de trois cartes (PC) : elles tiennent à l'écran, la piste ne défile pas (ni copies, ni glisser) ; dès la
+    // troisième, le défilement sans fin revient de lui-même (choix de Johann). Sur mobile, les cartes ne tiennent pas côte
+    // à côte : la piste finie reste
+    r.fixed = shown.length < 3 && innerWidth >= 761
+    pin.classList.toggle('rail--fixed', r.fixed)
     const all = [...strip.children].filter((c) => c.offsetParent)
     r.n = shown.length
     r.finite = all.length === r.n
@@ -400,14 +411,16 @@ const rails = [...document.querySelectorAll('.work__pin')].map((pin) => {
     r.step = all.length > 1 ? all[1].offsetLeft - all[0].offsetLeft : track.clientWidth
     r.setW = r.finite ? r.n * r.step : all[r.n] ? all[r.n].offsetLeft - all[0].offsetLeft : 0
     if (r.finite) { const max = (r.n - 1) * r.step; r.target = Math.min(max, Math.max(0, mod(r.target, r.setW))); r.x = r.target }
+    if (r.fixed) { r.target = r.x = 0; r.vel = 0 }
   }
   r.measure()
-  const nudge = (d) => { r.target = Math.round((r.target + d) / r.step) * r.step; r.last = performance.now(); r.tau = 0 }
+  const nudge = (d) => { if (r.fixed) return; r.target = Math.round((r.target + d) / r.step) * r.step; r.last = performance.now(); r.tau = 0 }
   pin.querySelectorAll('.work__nav').forEach((b) => b.addEventListener('click', () => nudge(r.step * +b.dataset.dir)))
-  track.addEventListener('keydown', (e) => { if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') { e.preventDefault(); nudge(r.step * (e.key === 'ArrowRight' ? 1 : -1)) } })
+  track.addEventListener('keydown', (e) => { if (r.fixed) return; if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') { e.preventDefault(); nudge(r.step * (e.key === 'ArrowRight' ? 1 : -1)) } })
   // pavé tactile / molette latérale (ou Maj + molette) ; molette de souris (verticale) : fait défiler la piste quand on
   // survole sa bande, sauf pendant un défilement de la page déjà en cours (la page continue, rien ne bloque en chemin)
   track.addEventListener('wheel', (e) => {
+    if (r.fixed) return   // piste fixe : la molette fait défiler la page
     const now = performance.now()
     let dx = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.shiftKey ? e.deltaY : 0
     // molette de souris à crans (verticale, ou Maj + molette) : une carte par cran, comme les flèches ; la piste glisse
@@ -427,7 +440,7 @@ const rails = [...document.querySelectorAll('.work__pin')].map((pin) => {
   // glisser (souris, doigt, stylet) ; le défilement vertical au doigt reste au navigateur (touch-action: pan-y)
   let down = null, moved = false
   track.addEventListener('pointerdown', (e) => {
-    if (e.button) return
+    if (e.button || r.fixed) return
     down = { x: e.clientX, y: e.clientY, t0: r.target, px: e.clientX, pt: performance.now(), id: e.pointerId, touch: e.pointerType === 'touch' }; moved = false; r.vel = 0
   })
   addEventListener('pointermove', (e) => {
@@ -533,7 +546,7 @@ initNameBulge([...document.querySelectorAll('.foot__logo.logotype--balayage, .lo
 // nom repasse sous le bas de l'écran), rejoué au retour
 { const el = document.querySelector('.foot__logo.logotype--balayage')
   if (el) {
-    const tr = reduced || !nameMap ? null : nameTrace(el, nameMap), DUR = 2200
+    const tr = reduced || !nameMap ? null : nameTrace(el, nameMap), DUR = 1500   // ms : durée du tracé (accélérée, choix de Johann)
     let a = -1, raf = 0, t0 = 0, fading = false, fadeT = 0
     // fondu de sortie : le SVG et, si le tracé est en cours, son canvas (posé juste avant, name-trace.js)
     const fadeTo = (v) => { for (const n of [el, el.previousElementSibling?.classList.contains('name-trace') ? el.previousElementSibling : null]) if (n) {

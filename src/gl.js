@@ -58,6 +58,7 @@ uniform sampler2D uMaskA;  // position le long du S en 16 bits (monogram-along.p
 uniform sampler2D uMaskW;  // demi-épaisseur locale du S (monogram-width.png, unités × 255 / 80)
 uniform vec2 uWidthK;      // contraste d'épaisseur du S : coefficient − 1 (0 : tel quel), demi-épaisseur moyenne (unités)
 uniform float uFloor;   // taille minimale des points dans le masque
+uniform vec2 uLv;       // niveaux de l'image (lumière du point le plus sombre et du plus clair) : étirés de noir à blanc
 uniform float uRadius;  // coins arrondis (0 : aucun)
 uniform vec3 uLens;     // centre (px CSS), rayon intérieur
 uniform float uLensO;   // rayon extérieur de l'anneau
@@ -185,6 +186,7 @@ vec4 halftoneS(vec2 p, vec2 off) {
   vec2 cell = floor(p / uCell);
   vec2 c = (cell + 0.5) * uCell;
   float l = lum(texture2D(uTex, cover(c + off)).rgb);
+  l = clamp((l - uLv.x) / max(uLv.y - uLv.x, 0.05), 0.0, 1.0);   // toujours toute la plage : le plus sombre en noir, le plus clair en blanc
   if (uHasText > 0.5) l = max(l, texture2D(uText, (c + off) / uRes).a);   // texte de la vignette : fait partie de l'image
   float m = 1.0;
   float inWord = 0.0;
@@ -491,7 +493,8 @@ void main() {
 // d'une vignette ni par son verre). Couleurs : roue « flux » du kit (même texture que le « o » du logo).
 
 export function createGL(canvas, { reduced }) {
-  const gl = canvas.getContext('webgl', { antialias: false, alpha: true, premultipliedAlpha: true, powerPreference: 'high-performance' })
+  // page sans toile (mentions légales) : rien à dessiner
+  const gl = canvas?.getContext('webgl', { antialias: false, alpha: true, premultipliedAlpha: true, powerPreference: 'high-performance' })
   if (!gl) return null
   gl.getExtension('OES_standard_derivatives')   // fwidth() pour les anneaux du kit (irisRing)
   const sh = (type, src) => { const s = gl.createShader(type); gl.shaderSource(s, type === gl.FRAGMENT_SHADER ? DERIV + src : src); gl.compileShader(s); if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) throw new Error(gl.getShaderInfoLog(s)); return s }
@@ -502,7 +505,7 @@ export function createGL(canvas, { reduced }) {
   gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer())
   gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW)
   const aLoc = gl.getAttribLocation(prog, 'a'); gl.enableVertexAttribArray(aLoc); gl.vertexAttribPointer(aLoc, 2, gl.FLOAT, false, 0, 0)
-  const U = {}; for (const n of ['uTex', 'uMask', 'uRes', 'uOrigin', 'uImg', 'uPos', 'uDpr', 'uCell', 'uReveal', 'uFade', 'uHasMask', 'uFloor', 'uRadius', 'uLens', 'uLensO', 'uSoft', 'uGlass', 'uEye', 'uMarkXf', 'uBg', 'uMaskB', 'uClip', 'uColor', 'uScr', 'uText', 'uHasText', 'uMono', 'uInk', 'uEdgeFloor', 'uFlow', 'uHal', 'uMaskW', 'uWidthK', 'uTip', 'uMaskA', 'uTipT']) U[n] = gl.getUniformLocation(prog, n)
+  const U = {}; for (const n of ['uTex', 'uMask', 'uRes', 'uOrigin', 'uImg', 'uPos', 'uDpr', 'uCell', 'uReveal', 'uFade', 'uHasMask', 'uFloor', 'uLv', 'uRadius', 'uLens', 'uLensO', 'uSoft', 'uGlass', 'uEye', 'uMarkXf', 'uBg', 'uMaskB', 'uClip', 'uColor', 'uScr', 'uText', 'uHasText', 'uMono', 'uInk', 'uEdgeFloor', 'uFlow', 'uHal', 'uMaskW', 'uWidthK', 'uTip', 'uMaskA', 'uTipT']) U[n] = gl.getUniformLocation(prog, n)
   gl.uniform1i(U.uTex, 0); gl.uniform1i(U.uMask, 1); gl.uniform1i(U.uText, 3); gl.uniform1i(U.uMaskB, 5)
   gl.uniform1f(U.uHal, FX.halation)
   gl.uniform4f(U.uMono, MONO_W, MONO_O[0], MONO_O[1], 0)
@@ -606,17 +609,34 @@ export function createGL(canvas, { reduced }) {
   // une texture par adresse d'image : les copies d'une vignette (piste sans fin, main.js : cinq jeux de cartes) partagent
   // celle de l'original au lieu de décoder et d'envoyer la même image cinq fois (temps bloqué au chargement, mémoire GPU)
   const texByUrl = new Map()
+  // niveaux d'une image (choix de Johann : chaque vignette va du noir pur au blanc pur) : lumière au 1er et au 99e
+  // centile, mesurée sur une réduction 64 × 64 (même formule que lum() du shader)
+  const lvCv = new OffscreenCanvas(64, 64), lvCx = lvCv.getContext('2d', { willReadFrequently: true })
+  const levels = (src) => {
+    try {
+      lvCx.clearRect(0, 0, 64, 64); lvCx.drawImage(src, 0, 0, 64, 64)
+      const d = lvCx.getImageData(0, 0, 64, 64).data, h = new Uint32Array(256)
+      for (let i = 0; i < d.length; i += 4) h[Math.round(0.2126 * d[i] + 0.7152 * d[i + 1] + 0.0722 * d[i + 2])]++
+      const n = d.length / 4, at = (q) => { let c = 0; for (let k = 0; k < 256; k++) { c += h[k]; if (c >= q * n) return k / 255 } return 1 }
+      const lo = at(0.01), hi = at(0.99)
+      return hi - lo > 0.05 ? [lo, hi] : [0, 1]
+    } catch { return [0, 1] }
+  }
   const sendNext = () => {
     while (pending.length && !(!pending[0].mark && document.documentElement.classList.contains('intro-lock'))) {
-      const v = pending.shift(), src = v.src, key = v.video ? '' : src.currentSrc || src.src
+      const v = pending.shift(), src = v.src
+      // image changée avec le mode pendant son attente (chargement en cours) : renvoyée à la fin de ce chargement (son
+      // écouteur load, plus haut), jamais envoyée à moitié chargée
+      if (!src || (!v.video && !(src.complete && src.naturalWidth))) continue
+      const key = v.video ? '' : src.currentSrc || src.src
       let e = key && texByUrl.get(key)
       const hit = !!e && e.img[0] > 0
       if (!hit) {
         if (key) { e = { tex: e?.tex || newTex(), img: null }; texByUrl.set(key, e) }
         upload(key ? e.tex : v.tex, src)
-        if (key) e.img = [src.naturalWidth, src.naturalHeight]
+        if (key) { e.img = [src.naturalWidth, src.naturalHeight]; e.lv = levels(src) }
       }
-      if (key) v.tex = e.tex
+      if (key) { v.tex = e.tex; v.lv = e.lv }
       v.img = key ? e.img : [src.videoWidth || src.naturalWidth, src.videoHeight || src.naturalHeight]; v.ready = v.img[0] > 0
       texVer++   // image renvoyée (ex. vignette changée avec le mode) : la toile doit être redessinée
       if (!hit) break   // un seul envoi réel par image affichée (pas de saccade) ; les copies déjà en mémoire suivent aussitôt
@@ -646,7 +666,7 @@ export function createGL(canvas, { reduced }) {
       const img = v.el.querySelector('img'), source = v.el.querySelector('source')
       const set = (el, attr) => { if (!el?.dataset.dark) return false; el.dataset.light ||= el.getAttribute(attr); const want = dark ? el.dataset.dark : el.dataset.light; if (el.getAttribute(attr) === want) return false; el.setAttribute(attr, want); return true }
       const a = set(source, 'srcset'), b = set(img, 'src')
-      if ((a || b) && v.tex) img.addEventListener('load', () => { if (!pending.includes(v)) pending.push(v) }, { once: true })
+      if ((a || b) && v.tex) img.addEventListener('load', () => { v.src ||= img; if (!pending.includes(v)) pending.push(v) }, { once: true })
     }
   }
   if (themed.length) { syncThemeImages(); new MutationObserver(syncThemeImages).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] }); matchMedia('(prefers-color-scheme: dark)').addEventListener?.('change', syncThemeImages) }
@@ -1140,7 +1160,7 @@ export function createGL(canvas, { reduced }) {
       gl.uniform1f(U.uEdgeFloor, theme.bg[0] + theme.bg[1] + theme.bg[2] > 1.5 ? 1 : 0.12)   // clair : pas d'effacement (flou CSS aux bords)
       gl.uniform1f(U.uDpr, dpr); gl.uniform1f(U.uCell, v.mark ? 6 : v.cell * (W >= 769 ? 1 / 1.15 : 1) * Math.min(1, Math.max(0.45, W / 1100)) * cellScale   /* PC : un cran plus fin (÷ 1,15) ; trame proportionnelle à la largeur d'écran (mobile : 0,45) */)
       gl.uniform1f(U.uReveal, reveal); gl.uniform1f(U.uFade, v.fade ? 1 : 0); gl.uniform1f(U.uHasMask, v.mark ? 1 : 0)
-      gl.uniform1f(U.uFloor, v.mark ? 0.6 : 0); gl.uniform1f(U.uRadius, glassy ? 1 : 0)
+      gl.uniform1f(U.uFloor, v.mark ? 0.6 : 0); gl.uniform2f(U.uLv, ...(v.lv || [0, 1])); gl.uniform1f(U.uRadius, glassy ? 1 : 0)
       // texte de la vignette (unité 3) ; sans texte, l'unité est vidée : elle ne doit jamais désigner la texture dans
       // laquelle on dessine (sinon la passe est refusée : « feedback loop »)
       if (v.text) textFor(v, w, h)

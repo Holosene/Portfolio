@@ -113,44 +113,51 @@ export const projects = [
   },
   {
     slug: 'dumbo',
-    genre: T('WebGL, IA SAM2', 'WebGL, SAM2 AI'),   // à côté du titre : l'outil ou la technique, pas une description du projet
+    // le site a changé (nov. 2026) : une salle d'exposition reconstituée en 3D, plus la galerie de volumes en points
+    // (l'ancienne page reste en ligne : original.html)
+    genre: T('Gaussian splatting, IA SAM 2', 'Gaussian splatting, SAM 2 AI'),   // à côté du titre : l'outil ou la technique, pas une description du projet
     title: 'Dumbo',
     year: '2026',
     milieu: T('Grands fonds', 'Deep sea'),
-    cover: 'dumbo/058.webp',
-    coverCredit: T('Rendu : Johann Arata, d’après des vidéos du Schmidt Ocean Institute', 'Render: Johann Arata, from Schmidt Ocean Institute footage'),
+    cover: 'dumbo/vignette.webp',
+    coverMobile: 'dumbo/vignette-mobile.webp',
+    coverCredit: T('Capture du site : Johann Arata ; créatures : vidéos du Schmidt Ocean Institute', 'Site capture: Johann Arata; creatures: Schmidt Ocean Institute footage'),
     spec: [
-      [T('Source', 'Source'), T('Vidéos de submersibles (Schmidt Ocean Institute)', 'Submersible footage (Schmidt Ocean Institute)')],
-      [T('Traitement', 'Processing'), T('Segmentation IA (SAM2), profondeur par luminosité', 'AI segmentation (SAM2), depth from brightness')],
-      [T('Rendu', 'Output'), T('Galerie 3D temps réel', 'Real-time 3D gallery')],
+      [T('Source', 'Source'), T('Plongées du ROV SuBastian (Schmidt Ocean Institute)', 'ROV SuBastian dives (Schmidt Ocean Institute)')],
+      [T('Traitement', 'Processing'), T('Créatures détourées par IA (SAM 2), salle et visiteurs en gaussiennes', 'Creatures cut out by AI (SAM 2), room and visitors as Gaussian splats')],
+      [T('Rendu', 'Output'), T('Salle d’exposition à parcourir, temps réel', 'Walkable exhibition room, real time')],
     ],
     intent: TODO('l’intention du projet en une phrase', 'the project’s intent in one sentence'),
     context: T(
-      'Des vidéos de grands fonds deviennent des volumes à parcourir, pour approcher une créature abyssale comme une sculpture.',
-      'Deep-sea footage turned into volumes to walk around, to approach a deep-sea creature like a sculpture.',
+      'Une salle d’exposition posée au fond des abysses : ses murs deviennent des hublots ouverts sur des créatures que personne ne peut voir de ses yeux. Proposition pour le Musée océanographique de Monaco.',
+      'An exhibition room set on the deep-sea floor: its walls become portholes onto creatures no one can see with their own eyes. A proposal for the Oceanographic Museum of Monaco.',
     ),
-    capture: T('Pas de captation propre : vidéos de submersibles du Schmidt Ocean Institute.', 'No own capture: submersible footage from the Schmidt Ocean Institute.'),
+    capture: T('Pas de captation propre : plongées filmées en 4K par le ROV SuBastian du Schmidt Ocean Institute. Aucune de ces espèces ne vit en aquarium ; certaines n’ont été filmées qu’une fois.', 'No own capture: dives filmed in 4K by the Schmidt Ocean Institute’s ROV SuBastian. None of these species lives in an aquarium; some were filmed only once.'),
     processing: T(
-      'Une IA de segmentation (SAM2) isole les créatures ; la luminosité de chaque pixel lui donne sa profondeur, comme une carte de profondeur. Ce n’est pas une reconstruction 3D mesurée.',
-      'A segmentation AI (SAM2) isolates the creatures; the brightness of each pixel sets its depth, like a depth map. This is not a measured 3D reconstruction.',
+      'Une IA de segmentation (SAM 2) détoure chaque créature dans les plongées entières, pour des passages longs et à leur taille réelle. La salle et ses visiteurs sont des nuages de gaussiennes (Gaussian splatting) ; les visiteurs la traversent comme sur une photo en pose longue.',
+      'A segmentation AI (SAM 2) cuts out each creature across whole dives, for long passages at true scale. The room and its visitors are Gaussian splats; the visitors cross it like a long-exposure photograph.',
     ),
-    staging: T('Une galerie parcourue à la première personne, en Three.js et WebGL.', 'A first-person gallery, built in Three.js and WebGL.'),
+    staging: T('On marche librement dans la salle, au clavier, à la souris ou au doigt. La seule lumière vient des écrans : les créatures surgissent du noir, s’approchent, puis y retournent. Ambiance sonore en continu.', 'Visitors walk freely through the room, by keyboard, mouse or touch. The only light comes from the screens: creatures rise out of the dark, come close, then sink back. Continuous soundscape.'),
     learned: TODO('ce que tu as appris, les limites', 'what you learned, the limits'),
     role: TODO('ton rôle', 'your role'),
-    tools: 'Three.js, WebGL, SAM2',
-    credits: [T('Vidéos : Schmidt Ocean Institute', 'Footage: Schmidt Ocean Institute'), TODO('mention exacte exigée par la licence du Schmidt Ocean Institute', 'exact licence wording')],
-    link: { label: T('Ouvrir le projet', 'Open the project'), href: 'https://holosene.github.io/dumbo-biovolume/' },
+    tools: 'Three.js, Spark (Gaussian splatting), SAM 2, Blender, Web Audio',
+    credits: [
+      T('Images : archives du Schmidt Ocean Institute (ROV SuBastian)', 'Footage: Schmidt Ocean Institute archives (ROV SuBastian)'),
+      T('Musique : Teimo (Schluss), Thomas Köner', 'Music: Teimo (Schluss), Thomas Köner'),
+      TODO('mention exacte exigée par la licence du Schmidt Ocean Institute', 'exact licence wording'),
+    ],
+    link: { label: T('Ouvrir le projet', 'Open the project'), href: 'https://johann-ar.github.io/Dumbo-biovolume/' },
     media: [
-      // contexte (l'espace), puis la mise en volume, puis la galerie d'ensemble
-      { src: 'dumbo/056.webp', alt: T('L’espace Dumbo, l’entrée', 'The Dumbo space, the entrance') },
-      { src: 'dumbo/057.webp', alt: T('L’espace Dumbo, près d’un mur', 'The Dumbo space, close to a wall') },
-      { src: 'dumbo/041.webp', alt: T('L’IA isole le sujet de l’image', 'AI isolating the subject'), layout: 'stack' },
-      { src: 'dumbo/053.webp', alt: T('La vidéo source mise en volume', 'The source footage turned into a volume'), layout: 'stack' },
-      { src: 'dumbo/058.webp', alt: T('Volume créé à partir d’une vidéo de submersible', 'Volume built from submersible footage') },
-      { src: 'dumbo/054.webp', alt: T('Le volume vu de côté', 'The volume seen from the side') },
-      { src: 'dumbo/061.webp', alt: T('Volume d’une créature', 'Volume of a creature'), layout: 'stack' },
-      { src: 'dumbo/048.webp', alt: T('Volume d’un animal marin', 'Volume of a sea creature'), layout: 'stack' },
-      { src: 'dumbo/052.webp', alt: T('Galerie de volumes', 'Gallery of volumes'), ratio: 2.2 },
+      // ordre de la visite : l'accueil, l'entrée dans la salle, la nef, les créatures derrière les écrans, les visiteurs
+      { src: 'dumbo/accueil.webp', alt: T('L’accueil du site : Dumbo, présences abyssales rares', 'The site’s home screen: Dumbo, rare abyssal presences') },
+      { src: 'dumbo/salle-marche.mp4', poster: 'dumbo/salle-marche-poster.webp', alt: T('Marche dans la salle, jusqu’à l’écran du fond', 'Walking through the room to the far screen') },
+      { src: 'dumbo/nef.webp', alt: T('La salle d’expo : écrans-hublots, visiteurs en gaussiennes', 'The exhibition room: porthole screens, visitors as Gaussian splats') },
+      { src: 'dumbo/nef-meduse.webp', alt: T('Une créature traverse l’écran du fond', 'A creature crossing the far screen'), layout: 'stack' },
+      { src: 'dumbo/nef-lumiere.webp', alt: T('Créatures sur les écrans et au sol', 'Creatures on the screens and on the floor'), layout: 'stack' },
+      { src: 'dumbo/meduse.webp', alt: T('Méduses derrière un écran, à leur taille réelle', 'Jellyfish behind a screen, at true scale') },
+      { src: 'dumbo/calmar.webp', alt: T('Une créature rouge surgit du noir', 'A red creature rising out of the dark'), layout: 'stack' },
+      { src: 'dumbo/hublot.webp', alt: T('Une créature tout près de l’écran', 'A creature right against the screen'), layout: 'stack' },
+      { src: 'dumbo/visiteurs.webp', alt: T('Les visiteurs, comme sur une photo en pose longue', 'The visitors, like a long-exposure photograph') },
     ],
   },
   {
@@ -273,7 +280,7 @@ export const projects = [
       T('Photos d’archives : NASA / JPL-Caltech, NASA / KSC', 'Archive photos: NASA / JPL-Caltech, NASA / KSC'),
       T('Projet indépendant, ni produit ni approuvé par la NASA', 'Independent project, not produced or endorsed by NASA'),
     ],
-    link: { label: T('Voir le projet', 'View the project'), href: 'https://github.com/Johann-Ar/Voyageur-1' },
+    link: { label: T('Ouvrir le projet', 'Open the project'), href: 'https://johann-ar.github.io/Voyageur-1/' },   // le site en ligne (le code : github.com/Johann-Ar/Voyageur-1)
     media: [
       // ordre de l'expérience : l'accueil, le récit, le disque et ses images, une image en volume, la galerie
       { src: 'voyageur-1/accueil.webp', dark: 'voyageur-1/accueil-sombre.webp', alt: T('L’accueil du site', 'The site’s home screen') },
@@ -322,6 +329,59 @@ export const projects = [
       { src: 'mondes-immerges/005.webp', alt: T('Motif génératif', 'Generative pattern'), layout: 'stack' },
       { src: 'mondes-immerges/010.webp', alt: T('Expérimentation graphique', 'Graphic experiment') },
       { book: 'mondes-immerges/livre', pages: 130, ratio: 1004 / 1400, poster: 'mondes-immerges/011.webp', alt: T('Le livre Mondes Immergés à feuilleter', 'The Mondes Immergés book, to leaf through') },
+    ],
+  },
+  {
+    // le site du globe (dépôt Mondes-immerges) ; l'article de recherche du même nom reste dans Recherche (slug mondes-immerges)
+    slug: 'mondes-immerges-globe',
+    genre: T('WebGPU, three.js', 'WebGPU, three.js'),   // à côté du titre : l'outil ou la technique, pas une description du projet
+    title: 'Mondes Immergés',
+    year: '2026',
+    milieu: T('Océans', 'Oceans'),
+    cover: 'mondes-immerges-site/vignette.webp',
+    coverMobile: 'mondes-immerges-site/vignette-mobile.webp',
+    coverCredit: T('Courants : NASA / JPL OSCAR ; relief : NOAA ETOPO1', 'Currents: NASA / JPL OSCAR; relief: NOAA ETOPO1'),
+    spec: [
+      [T('Source', 'Source'), T('Courants de surface mesurés par satellite (NASA OSCAR), relief ETOPO1, fleuves Natural Earth', 'Satellite-measured surface currents (NASA OSCAR), ETOPO1 relief, Natural Earth rivers')],
+      [T('Traitement', 'Processing'), T('300 000 particules portées par les courants réels, encre qui dérive et se diffuse', '300,000 particles carried by the real currents, ink that drifts and spreads')],
+      [T('Rendu', 'Output'), T('Globe en WebGPU (three.js, TSL), repli WebGL 2', 'WebGPU globe (three.js, TSL), WebGL 2 fallback')],
+    ],
+    intent: T(
+      'Relier dix documentaires National Geographic sur les mondes aquatiques par ce qui les relie vraiment : les courants de l’océan.',
+      'Linking ten National Geographic documentaries about aquatic worlds through what truly connects them: the ocean’s currents.',
+    ),
+    context: T(
+      'Prolongement de l’article de recherche Mondes Immergés : rendre sensibles des milieux aquatiques, cette fois en un site à parcourir. Projet étudiant non officiel.',
+      'A follow-up to the Mondes Immergés research paper: making aquatic environments felt, this time as a site to explore. Unofficial student project.',
+    ),
+    capture: T('Les champs de vitesse NASA, le relief et les fleuves du monde, rangés dans des textures.', 'NASA velocity fields, relief and the world’s rivers, stored in textures.'),
+    processing: T(
+      'Les particules déposent une encre jaune que le courant transporte ; les fleuves descendent vers la mer, la main qui survole écarte l’eau.',
+      'Particles leave a yellow ink that the current carries; rivers flow down to the sea, and a hovering hand parts the water.',
+    ),
+    staging: T(
+      'Sur le globe, chaque cadre jaune ouvre un film : son histoire, ses visages, sa galerie, comment agir.',
+      'On the globe, each yellow frame opens a film: its story, its people, its gallery, how to act.',
+    ),
+    learned: TODO('ce que tu as appris, les limites', 'what you learned, the limits'),
+    role: TODO('ton rôle', 'your role'),
+    tools: 'WebGPU, three.js (TSL), Vite, Python (NumPy, SciPy)',
+    credits: [
+      T('Films, photos et textes de référence : National Geographic', 'Films, photos and reference texts: National Geographic'),
+      T('Courants : NASA / JPL OSCAR, via NOAA CoastWatch ERDDAP', 'Currents: NASA / JPL OSCAR, via NOAA CoastWatch ERDDAP'),
+      T('Relief et bathymétrie : NOAA ETOPO1 ; fleuves : Natural Earth', 'Relief and bathymetry: NOAA ETOPO1; rivers: Natural Earth'),
+      T('Projet étudiant, ni produit ni approuvé par National Geographic', 'Student project, not produced or endorsed by National Geographic'),
+    ],
+    link: { label: T('Ouvrir le projet', 'Open the project'), href: 'https://johann-ar.github.io/Mondes-immerges/' },
+    media: [
+      // ordre de l'expérience : l'accueil, le globe et ses films, la page d'un documentaire
+      { src: 'mondes-immerges-site/accueil.webp', alt: T('L’accueil : le globe tourne, porté par les courants', 'The home screen: the globe turns, carried by the currents') },
+      { src: 'mondes-immerges-site/globe-voyage.mp4', poster: 'mondes-immerges-site/globe-voyage-poster.webp', alt: T('Explorer : le globe passe d’un film à l’autre', 'Explore: the globe travels from one film to the next') },
+      { src: 'mondes-immerges-site/globe-film.webp', alt: T('Un cadre jaune s’ouvre sur l’affiche du film', 'A yellow frame opens onto the film’s poster'), layout: 'stack' },
+      { src: 'mondes-immerges-site/globe-pieuvre.webp', alt: T('Secrets of the Octopus, sur le globe', 'Secrets of the Octopus, on the globe'), layout: 'stack' },
+      { src: 'mondes-immerges-site/documentaire.webp', alt: T('La page d’un documentaire : Secrets of the Octopus', 'A documentary’s page: Secrets of the Octopus') },
+      { src: 'mondes-immerges-site/documentaire-visages.webp', alt: T('L’histoire et les visages du film', 'The film’s story and people'), layout: 'stack' },
+      { src: 'mondes-immerges-site/documentaire-galerie.webp', alt: T('La galerie photo', 'The photo gallery'), layout: 'stack' },
     ],
   },
 ]

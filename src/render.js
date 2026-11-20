@@ -5,7 +5,7 @@
  */
 import { readFileSync, existsSync } from 'node:fs'
 import { createHash } from 'node:crypto'
-import { site, ui, projects as allProjects, research, studio, about, workIntro } from './content.js'
+import { site, ui, projects as allProjects, research, studio, workIntro } from './content.js'
 import sizes from './media-sizes.json' with { type: 'json' }
 import { logotypeSvg, resetLogotypes } from './logotype-svg.js'
 
@@ -49,7 +49,11 @@ export function render(lang) {
 
   // fiche projet : en-tête fixe, puis une rangée qui défile à l'horizontale (texte en colonnes, images, projet suivant)
   const fiche = (p, i) => {
-    const credits = [...(p.credits || []), ...(p.coverCredit ? [p.coverCredit] : [])]
+    // crédit de la vignette ajouté à la fiche seulement s'il apporte quelque chose : chaque source qu'il cite (après « : »)
+    // déjà dans les crédits de la fiche → il ne ferait que les répéter (Voyageur 1, Mondes Immergés)
+    const said = (p.credits || []).map((c) => t(c)).join(' | ')
+    const repeats = (c) => t(c).split(/\s*;\s*/).every((part) => { const src = part.split(/\s*:\s*/).slice(1).join(':').trim(); return src && said.includes(src) })
+    const credits = [...(p.credits || []), ...(p.coverCredit && !repeats(p.coverCredit) ? [p.coverCredit] : [])]
     const next = projects[(i + 1) % projects.length]
     // images des fiches : chaque image prend le format le plus proche d'un jeu fixe, du 16:9 (1920 × 1080, le plus
     // large) au 9:16 (smartphone, le plus haut) ; elle est recadrée dedans (object-fit: cover), jamais déformée
@@ -96,10 +100,10 @@ export function render(lang) {
     return `
   <section class="fiche" id="p-${p.slug}" data-lenis-prevent role="dialog" aria-modal="true" aria-labelledby="p-${p.slug}-t" tabindex="-1">
     <div class="edge edge--top" aria-hidden="true"></div>
-    <header class="fiche__head wrap"><div class="topbar__glass" aria-hidden="true">${'<i></i>'.repeat(5)}</div>
+    <div class="fiche__head wrap"><div class="topbar__glass" aria-hidden="true">${'<i></i>'.repeat(5)}</div>
       <span class="disp fiche__mini" aria-hidden="true">${esc(p.title)}</span>
       <div class="fiche__tools"><a class="fiche__close" href="#${p.research ? 'recherche' : 'projet'}-${p.slug}">${esc(t(ui.close))}</a></div>
-    </header>
+    </div>
     <div class="fiche__row">
       <div class="fiche__text">
         <h2 class="disp fiche__title" id="p-${p.slug}-t">${esc(p.title)}</h2>
@@ -136,14 +140,14 @@ export function render(lang) {
 <header class="topbar wrap">
   <div class="topbar__glass" aria-hidden="true">${'<i></i>'.repeat(5)}</div>
   <nav class="topbar__nav" aria-label="${esc(t(ui.nav))}">
-    <a href="#projets">${esc(t(ui.projects))}</a><a href="#a-propos">${esc(t(ui.studio))}</a><a href="#contact">${esc(t(ui.contact))}</a>
+    <a href="#projets">${esc(t(ui.projects))}</a><a href="#contact">${esc(t(ui.contact))}</a>
   </nav>
   <a href="#top" class="brand" aria-label="Holosene">
     <img class="brand__mark only-dark" draggable="false" src="${root}media/monogram-dark-base.svg?v=${MONO_V}" alt="Holosene" width="470" height="576">
     <img class="brand__mark only-light" draggable="false" src="${root}media/monogram-light-base.svg?v=${MONO_V}" alt="Holosene" width="470" height="576">
   </a>
   <div class="topbar__tools">
-    <button class="theme-toggle" type="button" data-light="${esc(t(ui.themeLight))}" data-dark="${esc(t(ui.themeDark))}" aria-label="${esc(t(ui.themeLight))}"><span class="theme-toggle__t">${lang === "fr" ? "Sombre" : "Dark"}</span></button>
+    <button class="theme-toggle" type="button" data-light="${esc(t(ui.themeLight))}" data-dark="${esc(t(ui.themeDark))}" aria-label="${esc(t(ui.themeLight))}"><span class="theme-toggle__t">${lang === "fr" ? "Clair" : "Light"}</span></button>
     <a class="lang" href="${other}" hreflang="${lang === 'fr' ? 'en' : 'fr'}" aria-label="FR/EN, ${esc(t(ui.langLabel))}"><span class="lang__fr">FR</span><span class="lang__sep">/</span><span class="lang__en">EN</span></a>
   </div>
 </header>
@@ -181,11 +185,9 @@ export function render(lang) {
     ${rail(lastOngoing(research.items.filter((r) => !r.hidden)).map((r, i) => card({ id: `recherche-${r.slug || i + 1}`, href: r.href, image: t(r.image), pos: r.pos, text: r.label && t(r.label), badge: r.when && t(r.when), title: t(r.title), genre: t(r.kind), todo: r.todo })), lang === 'fr' ? 'Recherche, défilement horizontal' : 'Research, horizontal scroll')}
   </section>
 
-  <section class="about wrap" id="a-propos" aria-labelledby="about-t">
-    <h2 class="lbl" id="about-t" data-sw>${seq(t(ui.studio))}</h2>
-    ${about.map((a) => `<p data-sw>${seq(t(a))}</p>`).join('')}
+  <section class="about wrap" id="a-propos" aria-labelledby="contact-t">   <!-- plus de texte « À propos » (choix de Johann) : le contact seul -->
     <div class="contact" id="contact">
-      <h2 class="lbl" id="contact-t" data-sw>${seq(t(ui.contact))}</h2>
+      <h2 class="disp" id="contact-t" data-sw>${seq(t(ui.contact))}</h2>
       <a class="mail" href="mailto:${esc(site.email)}" translate="no" aria-label="${esc(site.email)}, ${esc(t(ui.copy))}" data-copy="${esc(site.email)}" data-done="${esc(t(ui.copied))}"><span data-sw data-sw-letters aria-hidden="true">${[...site.email].map((ch, i) => `<span class="w" style="--i:${i}">${esc(ch)}</span>`).join('')}</span></a>
       <p class="copy-toast" role="status" aria-live="polite"></p>
       <div class="contact__row" data-reveal>
@@ -204,6 +206,7 @@ export function render(lang) {
 
 ${projects.map(fiche).join('')}
 <div class="fiche-veil" aria-hidden="true"></div>
-<a class="fiche-brand" href="#top" aria-label="Holosene, accueil"><img class="only-dark" src="${root}media/monogram-dark-base.svg?v=${MONO_V}" alt="" width="470" height="576" draggable="false"><img class="only-light" src="${root}media/monogram-light-base.svg?v=${MONO_V}" alt="" width="470" height="576" draggable="false"></a>
+<!-- logo des fiches : raccourci à la souris vers l'accueil ; masqué au clavier et aux lecteurs d'écran (la fiche a son bouton Fermer) -->
+<a class="fiche-brand" href="#top" tabindex="-1" aria-hidden="true"><img class="only-dark" src="${root}media/monogram-dark-base.svg?v=${MONO_V}" alt="" width="470" height="576" draggable="false"><img class="only-light" src="${root}media/monogram-light-base.svg?v=${MONO_V}" alt="" width="470" height="576" draggable="false"></a>
 `
 }
