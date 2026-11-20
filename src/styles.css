@@ -781,18 +781,18 @@ html.brand-fade .fiche-brand { transition: opacity 0.4s var(--ease-flow), visibi
 :root:root[lang="fr"] .topbar .lang > .hl.hl.hl span.lang__fr, :root:root[lang="en"] .topbar .lang > .hl.hl.hl span.lang__en { color: var(--bg) !important; text-shadow: none !important; }
 @media (prefers-reduced-motion: reduce) { .hl { transition: none !important; } }
 
-/* ——— survol des boutons et liens texte : plus d'aplat d'encre, un léger grossissement et une petite lueur (choix de
+/* ——— survol des boutons et liens texte : plus d'aplat d'encre ni de lueur, un léger grossissement depuis le centre (choix de
    Johann) ; le texte garde sa couleur. Remplace le surlignage ci-dessus (la copie .hl de hl.js est masquée). ——— */
 .hl { display: none !important; }
 .fiche__open::before { display: none !important; }
 .topbar__nav a:not(.lang), .socials a, .foot a, .fiche__close, .topbar .lang, .btn--light, .theme-toggle, .fiche__open, .legal a:not(.btn) {
   display: inline-block; transform-origin: 50% 55%; }
-.mail { transform-origin: 0 50%; }
+.mail { transform-origin: 50% 55%; }   /* grossissement à partir du centre, comme les autres boutons */
 .topbar__nav a:not(.lang), .socials a, .foot a, .mail, .fiche__close, .topbar .lang, .btn--light, .theme-toggle, .fiche__open, .legal a:not(.btn) {
   transition: transform var(--hl-dur) var(--hl-ease), text-shadow var(--hl-dur) var(--hl-ease) !important; }
 :is(.topbar__nav a:not(.lang), .socials a, .foot a, .mail, .fiche__close, .topbar .lang, .btn--light, .theme-toggle, .fiche__open, .legal a:not(.btn)):is(:hover, :focus-visible, :active) {
   background-size: 0% 100% !important; color: var(--ink) !important; outline: none; transform: scale(1.06);
-  text-shadow: 0 0 2.5px color-mix(in srgb, currentColor 55%, transparent), 0 0 7px color-mix(in srgb, currentColor 28%, transparent), 0 0 16px color-mix(in srgb, currentColor 15%, transparent) !important; }   /* la lueur du surlignage d'avant (léger flou des lettres et halo dégradé), à la couleur du texte pour rester visible sur le fond */
+  text-shadow: none !important; filter: none; }   /* plus de lueur (choix de Johann) : seulement le grossissement, depuis le centre */
 .mail:is(:hover, :focus-visible, :active) { transform: scale(1.03); }
 /* FR/EN au survol : mêmes couleurs qu'au repos (langue affichée à l'encre, l'autre et « / » en gris) */
 :root:root:root .topbar .lang:is(:hover, :focus-visible, :active) span { color: color-mix(in srgb, var(--ink) 58%, var(--bg)) !important; }
