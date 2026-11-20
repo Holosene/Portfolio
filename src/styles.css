@@ -224,6 +224,18 @@ main { position: relative; }   /* pas de contexte d'empilement : le mot de l'acc
 @media (prefers-reduced-motion: reduce) { .hero { height: 100svh; } }
 .hero__view { position: absolute; inset: 0; }
 .hero__view > img { opacity: 0 !important; }
+/* image de fond de l'accueil : plein écran, épinglée avec la scène (sticky), derrière le logo, la barre du haut et
+   même l'arrière-plan animé (.bg-canvas, z-index −2) : les formes colorées passent par-dessus, l'image remplace le fond
+   uni sous elles (backdrop.js, VEIL). Vignette d'opacité : elle se fond dans la page vers les bords. Elle arrive en
+   fondu une fois le chargeur devenu logo (intro-done). Sans arrière-plan animé : opacité réduite */
+.hero__bg { position: sticky; top: 0; z-index: -3; display: block; width: 100%; height: max(100svh, 560px); margin-bottom: calc(-1 * max(100svh, 560px));
+  object-fit: cover; pointer-events: none; user-select: none; opacity: 0.4;
+  -webkit-mask-image: radial-gradient(ellipse 72% 70% at 50% 50%, #000 30%, rgb(0 0 0 / 0.55) 62%, transparent 100%);
+  mask-image: radial-gradient(ellipse 72% 70% at 50% 50%, #000 30%, rgb(0 0 0 / 0.55) 62%, transparent 100%);
+  transition: opacity 1.6s var(--ease-flow); }
+.has-backdrop .hero__bg { opacity: 1; }
+.js:not(.intro-done) .hero__bg { opacity: 0; }
+@media (prefers-reduced-motion: reduce) { .hero__bg { transition: none; } }
 
 /* gabarit commun À propos / Projets / Contact : libellé à gauche, grand texte à droite */
 .row { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 20px; }

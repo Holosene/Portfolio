@@ -30,6 +30,7 @@ uniform vec4 uB[${N}];  // formes : centre (px CSS, dans la page), rayon (px), p
 uniform float uA[${N}]; // intensité de chaque forme (cycle de vie : naît, s'intensifie, s'éteint)
 ${KIT_IRIS}
 vec3 irisAt(float t) { float a = t * 6.2831853; return irisColor(vec2(sin(a), -cos(a))); }
+const float VEIL = 0.35;   // plus bas = image de l'accueil plus visible sous les couleurs
 float hash(vec2 p) { return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
 void main() {
   vec2 s = vec2(gl_FragCoord.x, uRes.y * uDpr - gl_FragCoord.y) / uDpr;   // px CSS, y vers le bas
@@ -58,7 +59,10 @@ void main() {
   float wk = exp(-dot(s - uWash.xy, s - uWash.xy) / (2.0 * WR * WR));
   col = mix(col, uWashCol, clamp(uWash.z * 0.14 * wk * mix(0.8, 1.0, uLight), 0.0, 0.6));
   col += (hash(gl_FragCoord.xy) - 0.5) / 255.0;   // tramage invisible (±0,5/255) : pas de bandes dans les dégradés
-  gl_FragColor = vec4(col, 1.0);
+  // voile : la toile n'est opaque qu'à VEIL ; seul son fond uni (base) devient transparent, les couleurs restent entières.
+  // Sur le fond de la page, rien ne change (base ≈ --bg) ; sur l'image de l'accueil (.hero__bg, dessous), elle
+  // remplace le fond uni à (1 − VEIL) : image + couleurs animées par-dessus (alpha prémultiplié)
+  gl_FragColor = vec4(max(col - (1.0 - VEIL) * base, 0.0), VEIL);
 }`
 
 export function createBackdrop(canvas, { reduced }) {

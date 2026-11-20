@@ -515,6 +515,7 @@ function showCard(card) {
 
 /* Accueil : le nom apparaît en balayage, la présentation s'allume ; les grands textes s'allument mot à mot au défilement. */
 const hero = document.querySelector('.hero')
+const heroBg = document.querySelector('.hero__bg'); let heroBgV = -1   // image de fond de l'accueil (styles.css, .hero__bg)
 let heroWords = [...document.querySelectorAll('.hero__line .w')]
 if (!heroWords.length) root.classList.add('hero-done')   // pages sans accueil : tout est visible d'emblée
 let heroOn = -1
@@ -681,6 +682,11 @@ function scrollEffects() {
   // le nom existe en deux versions (une ligne / deux lignes sur mobile) : même avancée pour les deux
   // le nom commence à se tracer pendant la fin du placement du logo (0,42) ; il est entier avant la présentation
   sweep(1 - k(0.42, 0.78))
+  // image de fond de l'accueil : s'efface dès le début du défilement (le logo rétrécit) et a disparu juste avant que
+  // le nom commence (0,42) ; l'arrière-plan reprend alors toute la place. filter, pas opacity : l'opacité porte le
+  // fondu d'arrivée (1,6 s), le défilement doit répondre sans retard
+  if (heroBg) { const t = k(0, 0.4), v = Math.round((1 - t * t * (3 - 2 * t)) * 1000) / 1000
+    if (v !== heroBgV) { heroBgV = v; heroBg.style.filter = v >= 1 ? '' : `opacity(${v})`; heroBg.style.visibility = v <= 0 ? 'hidden' : '' } }
   wordBlocks.forEach((b, j) => {
     const r = blockRects[j]
     const p = Math.min(1, Math.max(0, (vh * 0.85 - r.top) / (r.height + vh * 0.25)))
@@ -724,6 +730,7 @@ const glMade = new Promise((done) => requestAnimationFrame(() => setTimeout(() =
   try { gl = createGL(document.querySelector('.gl-canvas'), { reduced }) } catch (err) { console.warn(err) }
   // fond : formes colorées derrière une plaque dépolie, qui défilent avec la page et réagissent au curseur
   try { backdrop = createBackdrop(document.querySelector('.bg-canvas'), { reduced }) } catch (err) { console.warn(err) }
+  if (backdrop) root.classList.add('has-backdrop')   // l'image de l'accueil passe sous l'arrière-plan animé (styles.css, .hero__bg)
   done(gl)
 })))
 /* Écran de chargement : n'attend que l'essentiel (polices, image de l'accueil, logo WebGL prêt), et au moins une seconde
