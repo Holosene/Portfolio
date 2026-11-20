@@ -4,7 +4,6 @@ import './logotype.css'
 import { FLOW, updateFlow } from './flow.js'
 import Lenis from 'lenis'
 import { createGL, loaderRadius } from './gl.js'
-import { createBackdrop } from './backdrop.js'
 import { IRIS } from './iris-config.js'
 import { startFxCss } from './fx-css.js'
 import { nameTrace } from './name-trace.js'
@@ -699,11 +698,9 @@ const finishLoader = (done) => {
 /* WebGL : trame de points et lentille. Sans WebGL, les images restent visibles. */
 // créés juste après la première image affichée : la compilation des shaders bloque le fil principal, le chargeur doit
 // déjà être à l'écran (il tourne ensuite dans son worker, sans dépendre du fil principal)
-let gl = null, backdrop = null
+let gl = null   // fond de page : uni (src/theme.css), plus de toile animée
 const glMade = new Promise((done) => requestAnimationFrame(() => setTimeout(() => {
   try { gl = createGL(document.querySelector('.gl-canvas'), { reduced }) } catch (err) { console.warn(err) }
-  // fond : formes colorées derrière une plaque dépolie, qui défilent avec la page et réagissent au curseur
-  try { backdrop = createBackdrop(document.querySelector('.bg-canvas'), { reduced }) } catch (err) { console.warn(err) }
   done(gl)
 })))
 /* Écran de chargement : n'attend que l'essentiel (polices, image de l'accueil, logo WebGL prêt), et au moins une seconde
@@ -722,7 +719,7 @@ if ('scrollRestoration' in history) history.scrollRestoration = 'manual'
 // retour depuis une page annexe (bouton Fermer des mentions légales) : pas de chargeur ni d'intro, on revient sur Contact
 const backTo = (() => { try { const v = sessionStorage.getItem('backTo'); sessionStorage.removeItem('backTo'); return document.querySelector('.hero') ? v : null } catch { return null } })()
 const introLocked = !!document.querySelector('.hero') && !reduced && !ficheOf() && !backTo
-const inertEls = [...document.body.children].filter((e) => !e.matches('.loader, canvas, script, .bg-canvas, .gl-canvas'))
+const inertEls = [...document.body.children].filter((e) => !e.matches('.loader, canvas, script, .gl-canvas'))
 let unblock = () => {}
 if (introLocked) {
   root.classList.add('intro-lock'); inertEls.forEach((e) => { e.inert = true })
@@ -775,7 +772,6 @@ function loop(t) {
   ficheFrame(t)
   updateHero(t, hero)   // avancée de la scène d'accueil (freinée sur écran tactile)
   updateFlow(t)   // roue « flux » : une texture par image, partagée par le chargeur, le logo et la lentille
-  backdrop?.frame(t)
   gl?.frame(t)
   if (!reduced) scrollEffects()
   requestAnimationFrame(loop)
