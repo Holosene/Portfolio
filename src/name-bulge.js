@@ -192,7 +192,7 @@ export function initNameBulge(svgs, mapUrl) {
           for (let i = 0; i < 2; i++) {
             const b = it.balls[2 * w + i], k = t < 0 ? -1 : t / wv.dur[i]
             const f = 0.5 - 0.5 * Math.cos(Math.PI * Math.min(1, Math.max(0, k)))
-            let amp = k < 0 || k >= 1 ? 0 : ss(k / 0.12) * (1 - ss((k - 0.8) / 0.18))
+            let amp = k < 0 || k >= 1 ? 0 : ss(k / 0.4) * (1 - ss((k - 0.45) / 0.5))   // montée et retombée lentes (jamais d'à-coup)
             // tracé en cours : seulement là où tout est tracé. Ce facteur suit sa cible en douceur : la limite « déjà tracé »
             // fait des bonds le long du chemin, et un défilement rapide avance le front d'un coup (la boule surgissait ou
             // s'éteignait en une image) ; au départ d'une vague, il part directement de sa valeur
@@ -210,8 +210,8 @@ export function initNameBulge(svgs, mapUrl) {
       b0.a = follow(b0.a, near ? 1 : 0, near ? 0.18 : 0.35, dt)
       if (!near && b0.a < 0.003) b0.a = 0
       place(it, b0)
-      // les autres boules (battement) s'éteignent vite si le survol l'interrompt
-      for (const b of it.balls.slice(1)) { b.a = b.a < 0.003 ? 0 : follow(b.a, 0, 0.08, dt); place(it, b); if (b.a > 0) busy = true }
+      // les autres boules (battement) dégonflent en douceur si le survol l'interrompt
+      for (const b of it.balls.slice(1)) { b.a = b.a < 0.003 ? 0 : follow(b.a, 0, 0.25, dt); place(it, b); if (b.a > 0) busy = true }
       // en mouvement (balle ou ampleur) : image suivante ; à l'arrêt sous un curseur immobile, rien à recalculer
       if ((near ? 1 - b0.a > 0.002 : b0.a > 0) || Math.hypot(tx - b0.x, ty - b0.y) > 0.5) busy = true
     }

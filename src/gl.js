@@ -1005,7 +1005,7 @@ export function createGL(canvas, { reduced }) {
           // survol : seulement 0,7 s après la fin de la boule du défilement (pas de saut de la boule vers le curseur)
           const hov = !scrollBall && now - heroPT > 350 + 700 && hoverDevice && !ptr.touch && !reduced && !FLOW.hoverTarget && xf[4] >= 1 && sdS(tx, ty) > -BULGE_R * 0.5
           // boule automatique (hors survol) : position le long de l'axe, vitesse douce (départ et arrivée ralentis)
-          let auto = false, ending = false
+          let auto = false, autoEnv = 1
           if (!reduced && xf[4] >= 1 && v.maskW) {
             traceT0 ??= now + TRACE.delay
             if (hov) traceT0 = Math.max(traceT0, now + TRACE.delay)   // survol : le cycle attend que le curseur parte
@@ -1024,7 +1024,9 @@ export function createGL(canvas, { reduced }) {
               const [ax, ay] = axisAt(0.5 - 0.5 * Math.cos(Math.PI * k))
               // nouvelle boule : elle naît en haut du S (le reste de la précédente, presque effacé, disparaît)
               if (pass !== tracePass) { bulge.x = ax; bulge.y = ay; if (bulge.a < 0.35) bulge.a = 0 }
-              tx = ax; ty = ay; auto = k < 0.82; ending = !auto
+              // ampleur : enveloppe lente le long de la course (montée sur 40 %, retombée de 45 % à 88 %) ; nulle bien
+              // avant le départ de la boule suivante : la boule rétrécit doucement, jamais d'extinction d'un coup
+              tx = ax; ty = ay; auto = true; autoEnv = ss01(k / 0.4) * (1 - ss01((k - 0.45) / 0.43))
             }
             tracePass = hov ? 0 : pass
             // battement du nom (accueil et pied de page) : ses deux vagues, chacune à la suite d'une boule du S
@@ -1032,7 +1034,7 @@ export function createGL(canvas, { reduced }) {
             setNameHeart(scrollBall ? -1 : m, cycL, AXL[AXL.length - 1] * xf[2] / 1000 / TRACE.pass)
             if (scrollBall) {
               traceT0 = Math.max(traceT0, now + TRACE.delay); tracePass = 0
-              ;[tx, ty] = axisAt(sq); auto = true; ending = false
+              ;[tx, ty] = axisAt(sq); auto = true; autoEnv = 1
             }
           } else setNameHeart(-1, 0)
           const near = hov || auto
@@ -1047,7 +1049,9 @@ export function createGL(canvas, { reduced }) {
           // boule du défilement : son ampleur suit sa place dans le S comme celle du battement suit le temps (elle naît en
           // haut du S, s'efface avant d'atteindre le bas, dans un sens comme dans l'autre), au rythme du défilement
           const sEnv = scrollBall ? ss01(sq / 0.25) * (1 - ss01((sq - 0.8) / 0.15)) : 0
-          bulge.a = sbFade ? follow(bulge.a, 0, 0.05, dt) : scrollBall ? follow(bulge.a, sEnv, sEnv > bulge.a ? 0.12 : 0.06, dt) : follow(bulge.a, near ? 1 : 0, near ? 0.18 : ending ? 0.05 : 0.22, dt)
+          // (toujours en douceur : une boule ne gonfle ni ne dégonfle jamais d'un coup)
+          bulge.a = sbFade ? follow(bulge.a, 0, 0.14, dt) : scrollBall ? follow(bulge.a, sEnv, sEnv > bulge.a ? 0.12 : 0.14, dt)
+            : hov ? follow(bulge.a, 1, 0.2, dt) : auto ? follow(bulge.a, autoEnv, 0.06, dt) : follow(bulge.a, 0, 0.35, dt)
           sig.push(bulge.x, bulge.y, bulge.a, LOGO_TUNE.contrast, v.maskW ? 1 : 0) }
 
       }
