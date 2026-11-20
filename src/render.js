@@ -55,6 +55,7 @@ export function render(lang) {
     // large) au 9:16 (smartphone, le plus haut) ; elle est recadrée dedans (object-fit: cover), jamais déformée
     const FORMATS = [16 / 9, 3 / 2, 4 / 3, 1, 4 / 5, 2 / 3, 9 / 16]
     const format = (w, h) => FORMATS.reduce((best, f) => (Math.abs(Math.log(f * h / w)) < Math.abs(Math.log(best * h / w)) ? f : best))
+    // x.pos : point de cadrage dans ce format ([0,5, 0] = le haut reste entier)
     // vidéo (.mp4) : lecture muette en boucle, comme une image animée ; x.poster sert d'image d'attente
     const fig = (x) => {
       // livre feuilletable en 3D (src/book.js), pages en images : la couverture et un chargeur en attendant les pages
@@ -67,7 +68,7 @@ export function render(lang) {
       // vidéo : lue seulement quand elle est à l'écran (main.js, data-lazy), sinon en pause
       const el = /\.mp4$/.test(x.src)
         ? `<video src="${m(x.src)}"${x.poster ? ` poster="${m(x.poster)}"` : ''}${x.dark ? ` data-dark="${m(x.dark)}"` : ''}${x.posterDark ? ` data-dark-poster="${m(x.posterDark)}"` : ''} width="${w}" height="${h}" muted loop playsinline preload="none" data-lazy aria-label="${esc(t(x.alt))}"></video>`
-        : `<img src="${m(x.src)}"${x.dark ? ` data-dark="${m(x.dark)}"` : ''} alt="${esc(t(x.alt))}" width="${w}" height="${h}" loading="lazy" decoding="async">`
+        : `<img src="${m(x.src)}"${x.dark ? ` data-dark="${m(x.dark)}"` : ''}${x.pos ? ` style="object-position:${x.pos[0] * 100}% ${x.pos[1] * 100}%"` : ''} alt="${esc(t(x.alt))}" width="${w}" height="${h}" loading="lazy" decoding="async">`
       return `<figure style="--r:${ratio(x).toFixed(4)}">${el}</figure>`
     }
     const ratio = (x) => x.ratio || format(...(sizes[x.src] || [1200, 800]))

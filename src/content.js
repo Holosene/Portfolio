@@ -273,7 +273,7 @@ export const projects = [
       T('Photos d’archives : NASA / JPL-Caltech, NASA / KSC', 'Archive photos: NASA / JPL-Caltech, NASA / KSC'),
       T('Projet indépendant, ni produit ni approuvé par la NASA', 'Independent project, not produced or endorsed by NASA'),
     ],
-    link: { label: T('Voir le code', 'View the code'), href: 'https://github.com/Johann-Ar/Voyageur-1' },
+    link: { label: T('Voir le projet', 'View the project'), href: 'https://github.com/Johann-Ar/Voyageur-1' },
     media: [
       // ordre de l'expérience : l'accueil, le récit, le disque et ses images, une image en volume, la galerie
       { src: 'voyageur-1/accueil.webp', alt: T('L’accueil du site', 'The site’s home screen') },
@@ -317,7 +317,7 @@ export const projects = [
     media: [
       // contexte (le livre en main), puis les expérimentations, puis le livre à feuilleter
       { src: 'mondes-immerges/012.webp', alt: T('Expérimentation en volume', 'Volume experiment') },
-      { src: 'mondes-immerges/013.webp', alt: T('Page d’ouverture', 'Opening spread') },
+      { src: 'mondes-immerges/013.webp', pos: [0.5, 0.25], alt: T('Page d’ouverture', 'Opening spread') },
       { src: 'mondes-immerges/009.webp', alt: T('Aurores boréales transformées en particules', 'Northern lights turned into particles'), layout: 'stack' },
       { src: 'mondes-immerges/005.webp', alt: T('Motif génératif', 'Generative pattern'), layout: 'stack' },
       { src: 'mondes-immerges/010.webp', alt: T('Expérimentation graphique', 'Graphic experiment') },
