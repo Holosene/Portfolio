@@ -522,7 +522,10 @@ const wordsSvg = [...document.querySelectorAll('.hero .studio__word')]
 // nom de l'accueil : apparition tracée au défilement (name-trace.js, comme le S), dessinée dans un canvas pendant le
 // tracé ; avant et après, le SVG (rien, ou le nom entier). Sans WebGL (ou carte pas encore prête) : simple fondu du SVG
 const nameMap = (() => { const s = document.querySelector('.brand__mark')?.src; if (!s) return ''; const u = new URL('name-along.png', s); u.search = new URL(s).search; return u.href })()
-const sweeps = wordsSvg.filter((w) => w.classList.contains('logotype--balayage')).map((el) => ({ el, last: -1, tr: reduced || !nameMap ? null : nameTrace(el, nameMap) }))
+// grand nom : plus de tracé ; il se découvre en opacité du centre vers les deux côtés, au défilement (masque en dégradé,
+// comme la version du 12 novembre) : bande de fondu de largeur NAME_BAND (part de la demi-largeur du mot)
+const NAME_BAND = 0.6
+const sweeps = wordsSvg.filter((w) => w.classList.contains('logotype--balayage')).map((el) => ({ el, last: -1, tr: null }))
 if (import.meta.env.DEV) window.__sweeps = sweeps   // audit (scratch) : piloter le tracé image par image
 initNameBulge([...document.querySelectorAll('.foot__logo.logotype--balayage, .logotype--renfle')])   // renflement du petit nom (pied de page) ; plus sur le grand nom de l'accueil (design/archives/renflement-grand-nom)
 // pied de page : le même tracé, joué dans le temps quand le nom arrive entier à l'écran ; effacé quand on remonte (le
@@ -530,7 +533,10 @@ initNameBulge([...document.querySelectorAll('.foot__logo.logotype--balayage, .lo
 { const el = document.querySelector('.foot__logo.logotype--balayage')
   if (el) {
     const tr = reduced || !nameMap ? null : nameTrace(el, nameMap), DUR = 2200
-    let a = -1, raf = 0, t0 = 0
+    let a = -1, raf = 0, t0 = 0, fading = false, fadeT = 0
+    // fondu de sortie : le SVG et, si le tracé est en cours, son canvas (posé juste avant, name-trace.js)
+    const fadeTo = (v) => { for (const n of [el, el.previousElementSibling?.classList.contains('name-trace') ? el.previousElementSibling : null]) if (n) {
+      n.style.transition = v == null ? '' : 'opacity 0.6s var(--ease-flow)'; if (v == null) { if (n !== el) n.style.opacity = '' } else n.style.opacity = String(v) } }
     const set = (v) => {
       a = v
       const ready = !!tr?.ready
@@ -543,8 +549,17 @@ initNameBulge([...document.querySelectorAll('.foot__logo.logotype--balayage, .lo
     else {
       set(0)
       new IntersectionObserver(([e]) => {
-        if (e.isIntersecting && a < 1 && !raf) { t0 = performance.now() - a * DUR; raf = requestAnimationFrame(run) }
-        else if (!e.isIntersecting && e.boundingClientRect.top > 0) { cancelAnimationFrame(raf); raf = 0; set(0) }
+        if (e.isIntersecting && e.intersectionRatio >= 0.89) {
+          clearTimeout(fadeT); fadeTo(null)
+          if (fading) { fading = false; set(a) }   // retour pendant le fondu : le nom reprend où il en était
+          if (a < 1 && !raf) { t0 = performance.now() - a * DUR; raf = requestAnimationFrame(run) }
+        } else if (e.boundingClientRect.top > 0 && a > 0 && !fading) {
+          // on remonte : le nom s'efface en fondu d'opacité (plus de boules dès le départ), puis le tracé est remis à zéro
+          cancelAnimationFrame(raf); raf = 0; fading = true
+          el.classList.remove('bal-net')
+          fadeTo(0)
+          fadeT = setTimeout(() => { fading = false; fadeTo(null); set(0) }, 650)
+        }
       }, { threshold: 0.9 }).observe(el)
     }
   } }
@@ -555,8 +570,13 @@ function sweep(draw) {
     const ready = !!sw.tr?.ready
     if (a === sw.last && ready === sw.wasReady) continue
     sw.last = a; sw.wasReady = ready
-    if (ready) { sw.tr.draw(a); sw.tr.show(a > 0 && a < 1) } else sw.tr?.draw(a)
-    sw.el.style.opacity = ready ? (a > 0 ? '' : '0') : String(a)
+    if (ready) { sw.tr.draw(a); sw.tr.show(a > 0 && a < 1) }
+    // xn = distance au centre (0 au centre, 1 aux bords) : plein là où xn < a(1 + b) − b, rien là où xn > a(1 + b)
+    const out = a * (1 + NAME_BAND), inn = out - NAME_BAND, pc = (v) => `${(Math.max(-0.01, Math.min(1.01, v)) * 50).toFixed(2)}%`
+    const mask = a >= 1 ? '' : a <= 0 ? 'linear-gradient(transparent, transparent)'
+      : `linear-gradient(90deg, transparent calc(50% - ${pc(out)}), #000 calc(50% - ${pc(inn)}), #000 calc(50% + ${pc(inn)}), transparent calc(50% + ${pc(out)}))`
+    sw.el.style.webkitMaskImage = sw.el.style.maskImage = mask
+    sw.el.style.opacity = ''
     sw.el.classList.toggle('bal-net', a >= 1)   // nom entier : renflement au survol possible (name-bulge.js)
   }
 }

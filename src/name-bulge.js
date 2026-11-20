@@ -119,7 +119,8 @@ export function initNameBulge(svgs) {
       const whole = !it.el.classList.contains('logotype--balayage') || it.el.classList.contains('bal-net')
       // nom pas encore entier (tracé en cours, ou effacé au défilement) : aucune boule ; celles qui passaient dégonflent
       // en douceur (plus rien sur la seule partie tracée : le bord inachevé se déformait)
-      const on = r.width > 0 && r.bottom > 0 && r.top < innerHeight && whole
+      // et le nom entièrement à l'écran (rien de coupé par le haut ou le bas de la fenêtre)
+      const on = r.width > 0 && r.top >= 0 && r.bottom <= innerHeight && whole
       const [b0] = it.balls
       let tx = b0.x, ty = b0.y, near = false
       if (on && whole && px > r.left - 40 && px < r.right + 40 && py > r.top - 40 && py < r.bottom + 40) {
