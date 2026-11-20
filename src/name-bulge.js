@@ -1,15 +1,15 @@
 /**
- * Renflement de JOHANN ARATA (accueil et pied de page) (comme le S du logo, gl.js) : une balle épaissit les lettres sous
+ * Renflement de JOHANN ARATA (pied de page) (comme le S du logo, gl.js) : une balle épaissit les lettres sous
  * elle, comme une balle qui passe dans un collant. Le dessin est fait par les filtres .bal-rf du SVG (logotype-svg.js) :
  * on n'y règle que la région du filtre et la place de la bosse (autour de la balle), et son ampleur (k3).
  * - survol : la balle suit le curseur avec un léger retard ; elle ne naît que si le curseur lui-même touche une lettre
  *   (pas seulement s'il passe près : sinon elle déformait des lettres qu'on ne touchait pas). Seulement à la souris.
- * - battement (noms tracés : accueil, pied de page) : à la suite de chaque boule du S (gl.js, setNameHeart), une vague :
+ * - battement (nom tracé du pied de page) : à la suite de chaque boule du S (gl.js, setNameHeart), une vague :
  *   deux boules partent de l'espace entre JOHANN et ARATA et suivent le chemin principal du tracé (name-trace-data.js)
- *   jusqu'aux deux bouts du nom. Deux vagues, comme les deux boules du S (couches 0-1 et 2-3). Pendant le tracé du nom
- *   (name-trace.js), le battement passe déjà, mais une boule ne gonfle que là où tout ce qui l'entoure est déjà tracé
- *   (carte d'apparition lue une fois : moment le plus tardif autour de chaque point du chemin).
- * Noms tracés (accueil, pied de page) une fois entiers (.bal-net) ; hors animations réduites.
+ *   jusqu'aux deux bouts du nom. Deux vagues, comme les deux boules du S (couches 0-1 et 2-3). Aucune boule tant que le
+ *   nom n'est pas entier (tracé en cours, ou effacé au défilement).
+ * Seulement le petit nom (pied de page) : plus sur le grand nom de l'accueil (design/archives/renflement-grand-nom).
+ * Nom tracé une fois entier (.bal-net) ; hors animations réduites.
  */
 import { NAME_TRACE } from './name-trace-data.js'
 
@@ -59,40 +59,8 @@ const along = (pts) => {
 }
 const ss = (x) => { x = Math.min(1, Math.max(0, x)); return x * x * (3 - 2 * x) }
 
-// carte d'apparition (name-along.png) : moment d'apparition de chaque point (unités de la carte), ou −1 hors des lettres
-let mapA = null
-const loadMap = (url) => {
-  const im = new Image(); im.src = url
-  im.decode().then(() => {
-    const { w, h } = NAME_TRACE.map, c = Object.assign(document.createElement('canvas'), { width: w, height: h })
-    const x = c.getContext('2d', { willReadFrequently: true }); x.drawImage(im, 0, 0)
-    const d = x.getImageData(0, 0, w, h).data, A = new Float32Array(w * h)
-    for (let i = 0; i < w * h; i++) { const v = d[4 * i] * 256 + d[4 * i + 1]; A[i] = v >= 65535 ? -1 : v / 65534 * NAME_TRACE.amax }
-    mapA = A; kickAll?.()
-  }).catch(() => {})
-}
-// moment le plus tardif dans le carré de demi-côté H autour de chaque point du chemin h (G points le long du chemin),
-// aux coordonnées de ce SVG (nom empilé : ARATA décalé)
-const G = 160
-const latestAround = (h, H, st) => {
-  const { w, h: mh, m, k } = NAME_TRACE.map, out = new Float32Array(G), step = 1 / k
-  for (let g = 0; g < G; g++) {
-    const [cx, cy] = h(g / (G - 1)); let mx = -1
-    for (let y = cy - H; y <= cy + H; y += step) for (let x = cx - H; x <= cx + H; x += step) {
-      let u = x, v = y
-      if (st && v > st[2]) { u -= st[0]; v -= st[1] }
-      const i = Math.round((u + m) * k), j = Math.round((v + m) * k)
-      if (i < 0 || j < 0 || i >= w || j >= mh) continue
-      const a = mapA[j * w + i]; if (a > mx) mx = a
-    }
-    out[g] = mx
-  }
-  return out
-}
-
-export function initNameBulge(svgs, mapUrl) {
+export function initNameBulge(svgs) {
   if (!svgs.length || matchMedia('(prefers-reduced-motion: reduce)').matches) return
-  if (mapUrl) loadMap(mapUrl)
   const hoverOk = matchMedia('(hover: hover)').matches
   const items = svgs.map((el) => {
     const balls = [...el.querySelectorAll('.bal-r')].map((layer) => {
@@ -129,12 +97,6 @@ export function initNameBulge(svgs, mapUrl) {
   addEventListener('scroll', kick, { passive: true })
 
   const radius = (it) => Math.max(R_BASE, R_MIN_PX / (it.el.getScreenCTM()?.a || 1))
-  // tracé en cours : moment le plus tardif autour de chaque point des chemins du battement (recalculé si la bosse change)
-  const gateOf = (it) => {
-    const H = Math.round(radius(it) + R_PAD + 2)
-    if (it.gateH !== H) { it.gateH = H; it.gate = it.heart.map((h) => latestAround(h, H, it.st)) }
-    return it.gate
-  }
   const place = (it, b) => {
     const show = b.a > 0
     if (show !== b.shown) { b.layer.style.display = show ? '' : 'none'; b.shown = show }
@@ -155,9 +117,9 @@ export function initNameBulge(svgs, mapUrl) {
       const r = it.el.getBoundingClientRect()
       // nom tracé : entier (bal-net), ou en cours de tracé (tr-on : battement seulement, sur la partie tracée)
       const whole = !it.el.classList.contains('logotype--balayage') || it.el.classList.contains('bal-net')
-      const tracing = !whole && it.el.classList.contains('tr-on') && !!mapA && it.heart
-      const front = whole ? Infinity : tracing ? it.el._front ?? -1 : -1
-      const on = r.width > 0 && r.bottom > 0 && r.top < innerHeight && (whole || tracing)
+      // nom pas encore entier (tracé en cours, ou effacé au défilement) : aucune boule ; celles qui passaient dégonflent
+      // en douceur (plus rien sur la seule partie tracée : le bord inachevé se déformait)
+      const on = r.width > 0 && r.bottom > 0 && r.top < innerHeight && whole
       const [b0] = it.balls
       let tx = b0.x, ty = b0.y, near = false
       if (on && whole && px > r.left - 40 && px < r.right + 40 && py > r.top - 40 && py < r.bottom + 40) {
@@ -182,7 +144,6 @@ export function initNameBulge(svgs, mapUrl) {
       if (!near && dur && ht.some(runs)) {
         // battement : chaque vague, deux boules du centre vers les deux bouts (départ et arrivée ralentis, comme celles
         // du S) ; leur ampleur monte au départ et retombe avant l'arrivée ; vague finie : ses boules s'éteignent
-        const gate = whole ? null : gateOf(it)
         ht.forEach((t, w) => {
           // durée fixée au départ de la vague : la vitesse du S (sa taille) change pendant le défilement, et la recalculer
           // à chaque image faisait avancer la boule par à-coups, voire reculer
@@ -193,12 +154,6 @@ export function initNameBulge(svgs, mapUrl) {
             const b = it.balls[2 * w + i], k = t < 0 ? -1 : t / wv.dur[i]
             const f = 0.5 - 0.5 * Math.cos(Math.PI * Math.min(1, Math.max(0, k)))
             let amp = k < 0 || k >= 1 ? 0 : ss(k / 0.4) * (1 - ss((k - 0.45) / 0.5))   // montée et retombée lentes (jamais d'à-coup)
-            // tracé en cours : seulement là où tout est tracé. Ce facteur suit sa cible en douceur : la limite « déjà tracé »
-            // fait des bonds le long du chemin, et un défilement rapide avance le front d'un coup (la boule surgissait ou
-            // s'éteignait en une image) ; au départ d'une vague, il part directement de sa valeur
-            const gt = gate ? ss((front - gate[i][Math.round(f * (G - 1))]) / 250) : 1
-            b.g = b.g == null || t < 40 ? gt : follow(b.g, gt, 0.09, dt)
-            amp *= b.g
             ;[b.x, b.y] = it.heart[i](f); b.a = amp; b.prog = k; place(it, b)
           }
         })

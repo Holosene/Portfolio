@@ -132,7 +132,7 @@ export function nameTrace(svg, mapUrl) {
     last = a
     if (!api.ready) return
     const front = a * (N.amax + N.dmax + 2)
-    svg._front = front   // avancée du tracé (unités de la carte) : le battement ne passe que sur la partie tracée (name-bulge.js)
+    svg._front = front   // avancée du tracé (unités de la carte)
     gl.uniform1f(U.uFront, front)
     balls.forEach((b, i) => {
       // arrivée : la boule reste posée jusqu'à ce que l'encre l'ait recouverte (sinon une image sans rien, puis un bloc)

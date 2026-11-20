@@ -155,7 +155,7 @@ export function render(lang) {
       </div>
       <div class="hero__copy">
         <div class="hero__slot" aria-hidden="true"><img class="hero__mark only-dark" src="${root}media/monogram-dark-base.svg?v=${MONO_V}" alt="" width="470" height="576"><img class="hero__mark only-light" src="${root}media/monogram-light-base.svg?v=${MONO_V}" alt="" width="470" height="576"></div>
-        <h1 id="hero-t" class="hero__word"><span class="sr">Johann Arata · Holosene</span>${logotypeSvg({ mot: 'johann-arata', decoratif: true, balayage: true, className: 'studio__word hero__name studio__word--line' })}${logotypeSvg({ mot: 'johann-arata', decoratif: true, empile: true, balayage: true, className: 'studio__word hero__name studio__word--stack' })}</h1>
+        <h1 id="hero-t" class="hero__word"><span class="sr">Johann Arata · Holosene</span>${logotypeSvg({ mot: 'johann-arata', decoratif: true, balayage: true, renflement: false, className: 'studio__word hero__name studio__word--line' })}${logotypeSvg({ mot: 'johann-arata', decoratif: true, empile: true, balayage: true, renflement: false, className: 'studio__word hero__name studio__word--stack' })}</h1>
         <p class="hero__line" data-hwords>${words(t(studio))}</p>
         <a class="hero__cta" href="#projets" aria-label="${lang === 'fr' ? 'Voir les projets' : 'See the work'}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9.5l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
       </div>

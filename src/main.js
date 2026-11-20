@@ -523,7 +523,7 @@ const wordsSvg = [...document.querySelectorAll('.hero .studio__word')]
 const nameMap = (() => { const s = document.querySelector('.brand__mark')?.src; if (!s) return ''; const u = new URL('name-along.png', s); u.search = new URL(s).search; return u.href })()
 const sweeps = wordsSvg.filter((w) => w.classList.contains('logotype--balayage')).map((el) => ({ el, last: -1, tr: reduced || !nameMap ? null : nameTrace(el, nameMap) }))
 if (import.meta.env.DEV) window.__sweeps = sweeps   // audit (scratch) : piloter le tracé image par image
-initNameBulge([...sweeps.map((sw) => sw.el), ...document.querySelectorAll('.foot__logo.logotype--balayage, .logotype--renfle')], nameMap)   // renflement du nom au survol (name-bulge.js)
+initNameBulge([...document.querySelectorAll('.foot__logo.logotype--balayage, .logotype--renfle')])   // renflement du petit nom (pied de page) ; plus sur le grand nom de l'accueil (design/archives/renflement-grand-nom)
 // pied de page : le même tracé, joué dans le temps quand le nom arrive entier à l'écran ; effacé quand on remonte (le
 // nom repasse sous le bas de l'écran), rejoué au retour
 { const el = document.querySelector('.foot__logo.logotype--balayage')
