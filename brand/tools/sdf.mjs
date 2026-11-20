@@ -8,6 +8,7 @@
 // exacte de Felzenszwalb, dedans et dehors), puis moyennée par blocs de 4 × 4 : les marches de la trame disparaissent.
 import { chromium } from 'playwright'
 import { readFileSync, writeFileSync } from 'node:fs'
+import { execFileSync } from 'node:child_process'
 import { LOGO_CONTRAST_BASE } from '../../src/logo-tune.js'
 
 const svg = readFileSync(new URL('../../design/logo-kit/svg/monogram-iris-dark.svg', import.meta.url), 'utf8')
@@ -177,6 +178,9 @@ const url = await p.evaluate(({ S_PATH, O_PATH, edt, VB, LOGO_CONTRAST_BASE }) =
     const e = S[i] < 0 ? smin(S[i] * 0.35, Math.max(S[i], Sb[i]), Math.max(0.3, -S[i] * 0.3)) : 0
     iw.data[i * 4 + 1] = Math.round(Math.min(255, Math.sqrt(Math.max(0, -e / 64)) * 255)) }   // codage en racine : niveaux serrés près du bord (0,06 unité à 1 unité du bord), là où se dessine le contour poussé
   xw.putImageData(iw, 0, 0)
+  // demi-épaisseur moyenne du S (unités), sur les octets écrits (canal R de la carte d'épaisseur, dedans du S : canal B
+  // de la carte de distance > 127,5) : gl.js la lisait au chargement en relisant la carte ; la voici écrite d'avance
+  let wRef = 0; { let n = 0; for (let i = 0; i < W * H; i++) if (img.data[i * 4 + 2] > 127.5) { n++; wRef += iw.data[i * 4] * 80 / 255 } wRef /= n }
   // position le long du tracé (projection sur l'axe, de −0,1 à 1,1) en 16 bits (R : octet fort, V : octet faible ; l'interpolation bilinéaire reste exacte) :
   // front de l'apparition du S net et régulier (8 bits : paliers de ~6 unités, bout du trait cabossé)
   const ca = new OffscreenCanvas(W, H), xa = ca.getContext('2d'), ia = xa.createImageData(W, H)
@@ -209,14 +213,14 @@ const url = await p.evaluate(({ S_PATH, O_PATH, edt, VB, LOGO_CONTRAST_BASE }) =
     xs.putImageData(is, 0, 0); return cs
   }
   const toUrl = (cv) => cv.convertToBlob({ type: 'image/png' }).then((bl) => new Promise((r) => { const f = new FileReader(); f.onload = () => r(f.result); f.readAsDataURL(bl) }))
-  return Promise.all([toUrl(c), toUrl(cw), toUrl(sMono('FFFFFF')), toUrl(sMono('1E1E1E')), pathPts, toUrl(ca)])
+  return Promise.all([toUrl(c), toUrl(cw), toUrl(sMono('FFFFFF')), toUrl(sMono('1E1E1E')), pathPts, toUrl(ca), wRef])
 }, { S_PATH, O_PATH, edt, VB, LOGO_CONTRAST_BASE })
 await b.close()
 writeFileSync(new URL('../../public/media/monogram-sdf.png', import.meta.url), Buffer.from(url[0].split(',')[1], 'base64'))
 writeFileSync(new URL('../../public/media/monogram-width.png', import.meta.url), Buffer.from(url[1].split(',')[1], 'base64'))
 writeFileSync(new URL('../../public/media/monogram-along.png', import.meta.url), Buffer.from(url[5].split(',')[1], 'base64'))
 // axe du S (unités du monogramme, de haut en bas) : trajet de la boule automatique (gl.js)
-writeFileSync(new URL('../../src/monogram-path.js', import.meta.url), `// généré par brand/tools/sdf.mjs : axe du S du logo (unités du monogramme, 816 × 1000), de son extrémité du haut à celle du bas\nexport const S_AXIS = ${JSON.stringify(url[4])}\n`)
+writeFileSync(new URL('../../src/monogram-path.js', import.meta.url), `// généré par brand/tools/sdf.mjs : axe du S du logo (unités du monogramme, 816 × 1000), de son extrémité du haut à celle du bas\nexport const S_AXIS = ${JSON.stringify(url[4])}\n// demi-épaisseur moyenne du S (unités) dans monogram-width.png\nexport const S_WIDTH_REF = ${url[6]}\n`)
 // monogrammes des petits logos : SVG du kit, S remplacé par son image à l'épaisseur de base (le « o » ne change pas)
 for (const [mode, k] of [['dark', 2], ['light', 3]]) {
   const kit = readFileSync(new URL(`../../design/logo-kit/svg/monogram-iris-${mode}.svg`, import.meta.url), 'utf8')
@@ -224,4 +228,6 @@ for (const [mode, k] of [['dark', 2], ['light', 3]]) {
   if (out === kit) throw new Error('S introuvable dans monogram-iris-' + mode + '.svg')
   writeFileSync(new URL(`../../public/media/monogram-${mode}-base.svg`, import.meta.url), out)
 }
+// cartes : recompressées sans perte (pixels identiques, voir png-sans-perte.py)
+execFileSync('python3', [new URL('png-sans-perte.py', import.meta.url).pathname, ...['sdf', 'width', 'along'].map((n) => new URL(`../../public/media/monogram-${n}.png`, import.meta.url).pathname)], { stdio: 'inherit' })
 console.log('public/media/monogram-sdf.png, public/media/monogram-width.png, public/media/monogram-along.png, public/media/monogram-{dark,light}-base.svg')

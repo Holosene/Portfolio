@@ -11,6 +11,7 @@
 // 16 bits en R (fort) et V (faible), / AMAX. Hors des lettres : prolongée de quelques px (lecture bilinéaire nette au bord).
 import { chromium } from 'playwright'
 import { readFileSync, writeFileSync } from 'node:fs'
+import { execFileSync } from 'node:child_process'
 
 const svg = readFileSync(new URL('../../public/logotypes/svg/johann-arata.svg', import.meta.url), 'utf8').replace(/currentColor/g, '#000')
 const [, , W, H] = svg.match(/viewBox="([^"]+)"/)[1].split(/\s+/).map(Number)   // 0 0 3052 344
@@ -217,6 +218,8 @@ const png = await p.evaluate(async ({ px, w, h }) => {
 }, { px: Array.from(rgba), w: w2, h: h2 })
 await b.close()
 writeFileSync(new URL('../../public/media/name-along.png', import.meta.url), Buffer.from(png))
+// recompressée sans perte (pixels identiques, voir png-sans-perte.py)
+execFileSync('python3', [new URL('png-sans-perte.py', import.meta.url).pathname, new URL('../../public/media/name-along.png', import.meta.url).pathname], { stdio: 'inherit' })
 
 const r1 = (v) => Math.round(v * 10) / 10
 const data = {

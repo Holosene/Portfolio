@@ -13,7 +13,7 @@ import { FX, hueAt } from './fx-config.js'
 import { FLOW } from './flow.js'
 import { HERO } from './hero-progress.js'
 import { LOGO_TUNE } from './logo-tune.js'
-import { S_AXIS } from './monogram-path.js'
+import { S_AXIS, S_WIDTH_REF } from './monogram-path.js'
 import { setNameHeart, setNameRhythm, nameHeartDur } from './name-bulge.js'
 
 // roue du logo-kit (source de vérité) : irisColor(p), irisRing(p, Ro) ; irisAt(t) pour une position t sur le cercle
@@ -616,7 +616,9 @@ export function createGL(canvas, { reduced }) {
     const src = v.video || el.querySelector('img')
     // envoi au GPU : en file, une image par image affichée (pas de saccade), le logo de l'accueil d'abord ; pendant le
     // chargeur et l'intro, seul le logo (les vignettes, plus bas, attendent la fin de l'intro)
-    const done = () => { v.src = src; if (v.mark) pending.unshift(v); else pending.push(v) }
+    const push = () => { v.src = src; if (v.mark) pending.unshift(v); else pending.push(v) }
+    // image : décodée d'abord hors du fil principal (decode()), l'envoi au GPU ne fait plus que la copier
+    const done = v.video ? push : () => src.decode().catch(() => {}).then(push)
     if (v.video) v.video.addEventListener('loadeddata', done, { once: true })
     else if (src.complete && src.naturalWidth) done()
     else { src.loading = 'eager'; src.addEventListener('load', done, { once: true }) }
@@ -671,7 +673,8 @@ export function createGL(canvas, { reduced }) {
   const revealFront = (r) => -0.09 + 1.18 * r   // avant le haut du S → après son bas (le bout rond naît et sort en entier)
   let traceT0 = null, cycA = 0, cycL = 0, tracePass = 0, heroPT = -1e9, heroPL = 0, sbOn = false, sbFade = false
   const ss01 = (x) => { x = Math.min(1, Math.max(0, x)); return x * x * (3 - 2 * x) }
-  let sdfB = null, widthRef = 50   // demi-épaisseur moyenne du S (unités), recalculée au chargement de la carte
+  let sdfB = null   // demi-épaisseur moyenne du S : S_WIDTH_REF (calculée d'avance par brand/tools/sdf.mjs)
+  const widthRef = S_WIDTH_REF
   const sdS = (x, y) => {
     if (!sdfB) return -64
     const X = Math.round(x + SDF_PAD), Y = Math.round(y + SDF_PAD)   // carte : cadre du monogramme + marge
@@ -699,7 +702,7 @@ export function createGL(canvas, { reduced }) {
     const markSrc = new URL(document.querySelector('.brand__mark').src), sdfUrl = new URL('monogram-sdf.png', markSrc)
     sdfUrl.search = markSrc.search   // même version que le logo (?v=, render.js) : jamais l'ancienne carte en cache
     im.src = sdfUrl.href
-    // carte d'épaisseur du S (contraste d'épaisseur, LOGO_TUNE) ; sa moyenne dans le S est calculée ici, une fois
+    // carte d'épaisseur du S (contraste d'épaisseur, LOGO_TUNE) ; sa moyenne dans le S : S_WIDTH_REF (monogram-path.js)
     const iw = new Image()
     let wDone; const wReady = new Promise((r) => { wDone = r; iw.onerror = r })
     iw.addEventListener('load', () => {
@@ -708,13 +711,6 @@ export function createGL(canvas, { reduced }) {
       upload(t, iw)
       gl.pixelStorei(gl.UNPACK_COLORSPACE_CONVERSION_WEBGL, gl.BROWSER_DEFAULT_WEBGL)
       v.maskW = t
-      try {
-        const c = document.createElement('canvas'); c.width = SDF_W; c.height = SDF_H
-        const x = c.getContext('2d', { willReadFrequently: true, colorSpace: 'srgb' }); x.drawImage(iw, 0, 0)
-        const d = x.getImageData(0, 0, SDF_W, SDF_H).data
-        const avg = () => { let n = 0, sum = 0; for (let i = 0; i < sdfB.length; i++) if (sdfB[i] > 127.5) { n++; sum += d[i * 4] * 80 / 255 } if (n) widthRef = sum / n }
-        if (sdfB) avg(); else im.addEventListener('load', () => sdfB && avg())
-      } catch { /* moyenne par défaut */ }
       wDone()
     })
     const wUrl = new URL('monogram-width.png', markSrc); wUrl.search = markSrc.search
