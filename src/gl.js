@@ -848,7 +848,9 @@ export function createGL(canvas, { reduced }) {
     }
     // la lentille : visible quand le pointeur est sur une carte (pas sur l'accueil)
     const small = W < 600
-    const Ro = small ? 76 : 95, Ri = Ro - Ro * 14 / 88   // anneau de la lentille (95 px, +8 % ; épaisseur proportionnelle ; couleurs du kit)
+    // anneau de la lentille (20 nov. 2026 : agrandi de 7 %, 95 → 102 px, mobile 76 → 81 ; trait affiné, 14/88 → 10/88 du
+    // rayon ; couleurs du kit)
+    const Ro = small ? 81 : 102, Ri = Ro - Ro * 10 / 88
     let over = null
     for (const v of views) {
       if (v.mark || !v.ready) continue
