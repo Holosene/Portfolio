@@ -590,11 +590,24 @@ export function createGL(canvas, { reduced }) {
   let order = null
   const pending = []
   let texVer = 0
+  // une texture par adresse d'image : les copies d'une vignette (piste sans fin, main.js : cinq jeux de cartes) partagent
+  // celle de l'original au lieu de décoder et d'envoyer la même image cinq fois (temps bloqué au chargement, mémoire GPU)
+  const texByUrl = new Map()
   const sendNext = () => {
-    if (!pending.length || (!pending[0].mark && document.documentElement.classList.contains('intro-lock'))) return
-    const v = pending.shift(), src = v.src
-    upload(v.tex, src); v.img = [src.videoWidth || src.naturalWidth, src.videoHeight || src.naturalHeight]; v.ready = v.img[0] > 0
-    texVer++   // image renvoyée (ex. vignette changée avec le mode) : la toile doit être redessinée
+    while (pending.length && !(!pending[0].mark && document.documentElement.classList.contains('intro-lock'))) {
+      const v = pending.shift(), src = v.src, key = v.video ? '' : src.currentSrc || src.src
+      let e = key && texByUrl.get(key)
+      const hit = !!e && e.img[0] > 0
+      if (!hit) {
+        if (key) { e = { tex: e?.tex || newTex(), img: null }; texByUrl.set(key, e) }
+        upload(key ? e.tex : v.tex, src)
+        if (key) e.img = [src.naturalWidth, src.naturalHeight]
+      }
+      if (key) v.tex = e.tex
+      v.img = key ? e.img : [src.videoWidth || src.naturalWidth, src.videoHeight || src.naturalHeight]; v.ready = v.img[0] > 0
+      texVer++   // image renvoyée (ex. vignette changée avec le mode) : la toile doit être redessinée
+      if (!hit) break   // un seul envoi réel par image affichée (pas de saccade) ; les copies déjà en mémoire suivent aussitôt
+    }
   }
   const views = [...document.querySelectorAll('[data-gl]')].map((el) => {
     const v = { el, tex: newTex(), img: null, video: el.querySelector('video'), ready: false, seen: 0, glass: 0, color: el.hasAttribute('data-color'), text: el.dataset.text || '', textTex: null, textKey: '',
