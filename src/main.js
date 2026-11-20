@@ -391,7 +391,7 @@ const rails = [...document.querySelectorAll('.work__pin')].map((pin) => {
   const r = { pin, track, strip, originals, x: 0, target: 0, vel: 0, setW: 0, start: 0, n: 0, last: 0 }
   // mobile : piste finie (copies masquées en CSS) ; elle s'arrête à la première et à la dernière carte
   r.measure = () => {
-    pin.style.setProperty('--track-w', track.clientWidth + 'px')   // largeur des vignettes (styles.css) : centre exact
+    ;(pin.closest('.work') || pin).style.setProperty('--track-w', track.clientWidth + 'px')   // largeur des vignettes (styles.css) : centre exact ; posée sur la section : le texte d'en-tête s'aligne sur la vignette
     const shown = originals.filter((c) => c.offsetParent)
     const all = [...strip.children].filter((c) => c.offsetParent)
     r.n = shown.length
@@ -686,7 +686,7 @@ function scrollEffects() {
   // le nom commence (0,42) ; l'arrière-plan reprend alors toute la place. filter, pas opacity : l'opacité porte le
   // fondu d'arrivée (1,6 s), le défilement doit répondre sans retard
   if (heroBg) { const t = k(0, 0.4), v = Math.round((1 - t * t * (3 - 2 * t)) * 1000) / 1000
-    if (v !== heroBgV) { heroBgV = v; heroBg.style.filter = v >= 1 ? '' : `opacity(${v})`; heroBg.style.visibility = v <= 0 ? 'hidden' : '' } }
+    if (v !== heroBgV) { heroBgV = v; heroBg.style.filter = v >= 1 ? '' : `opacity(${v})`; heroBg.style.visibility = v <= 0 ? 'hidden' : ''; backdrop?.setVeil(1 - 0.65 * v) } }
   wordBlocks.forEach((b, j) => {
     const r = blockRects[j]
     const p = Math.min(1, Math.max(0, (vh * 0.85 - r.top) / (r.height + vh * 0.25)))
@@ -730,7 +730,7 @@ const glMade = new Promise((done) => requestAnimationFrame(() => setTimeout(() =
   try { gl = createGL(document.querySelector('.gl-canvas'), { reduced }) } catch (err) { console.warn(err) }
   // fond : formes colorées derrière une plaque dépolie, qui défilent avec la page et réagissent au curseur
   try { backdrop = createBackdrop(document.querySelector('.bg-canvas'), { reduced }) } catch (err) { console.warn(err) }
-  if (backdrop) root.classList.add('has-backdrop')   // l'image de l'accueil passe sous l'arrière-plan animé (styles.css, .hero__bg)
+  if (backdrop) { root.classList.add('has-backdrop'); backdrop.setVeil(heroBg && heroBgV !== 0 ? 1 - 0.65 * (heroBgV < 0 ? 1 : heroBgV) : 1) }   // voile : image de l'accueil sous les couleurs   // l'image de l'accueil passe sous l'arrière-plan animé (styles.css, .hero__bg)
   done(gl)
 })))
 /* Écran de chargement : n'attend que l'essentiel (polices, image de l'accueil, logo WebGL prêt), et au moins une seconde
@@ -760,7 +760,8 @@ if (introLocked) {
   addEventListener('touchmove', block, { passive: false, capture: true })
   addEventListener('scroll', pin, { passive: true })
   unblock = () => { removeEventListener('wheel', block, { capture: true }); removeEventListener('touchmove', block, { capture: true }); removeEventListener('scroll', pin) }
-} else root.classList.add('intro-done')
+} else root.classList.add('intro-done', 'cta-ready')
+const CTA_DELAY = 2500   // ms entre la fin de l'arrivée du logo et l'apparition de la flèche
 const endIntro = () => {
   // fin de l'intro verrouillée : page libérée, remise en haut
   if (root.classList.contains('intro-lock')) {
@@ -769,6 +770,7 @@ const endIntro = () => {
     root.classList.remove('intro-lock')
   }
   root.classList.add('intro-done')
+  setTimeout(() => root.classList.add('cta-ready'), CTA_DELAY)   // flèche : un moment après l'arrivée (styles.css)
   // toujours : le défilement doux démarre (y compris sur les pages sans intro, où il restait arrêté)
   if (!ficheOf()) lenis?.start()
 }

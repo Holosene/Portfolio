@@ -279,15 +279,14 @@ main { position: relative; }   /* pas de contexte d'empilement : le mot de l'acc
 .hero__word { margin: 0; line-height: 0; }
 .hero__word .studio__word { width: min(64vw, 820px); height: auto; }
 .hero__line { margin: 0; max-width: 38ch; text-align: center !important; font-size: var(--fs-text); line-height: 1.3; color: var(--ink-86); text-wrap: balance; }
-.hero__cta { position: absolute; left: 50%; bottom: calc(5svh + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); z-index: 2; pointer-events: auto; display: grid; place-items: center; width: 64px; height: 64px; color: var(--ink); }   /* un seul chevron arrondi, centré (zone cliquable confortable) */
+.hero__cta { position: absolute; left: 50%; bottom: calc(3svh + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); z-index: 2; pointer-events: auto; display: grid; place-items: center; width: 64px; height: 64px; color: var(--ink); }   /* un seul chevron arrondi, centré (zone cliquable confortable) */
 .hero__cta svg { width: 40px; height: 40px; animation: nudge 1.8s var(--ease-in-out) infinite; }   /* plus petite en haut de son mouvement */
 /* accueil : rien d'autre que le fond, le gros logo et la présentation tant que l'écran ne descend pas */
 .js:not(.hero-done) body > .edge { visibility: hidden; }
 .js:not(.intro-done) .topbar { opacity: 0; visibility: hidden; }   /* barre du haut : dès la fin de l'animation d'apparition du logo */
 .js:not(.intro-done) .topbar * { visibility: hidden !important; }   /* aucun élément de la barre (petit logo compris) pendant l'intro */
-/* flèche : un court instant après la fin de l'arrivée du logo (intro-done, main.js) */
-.js:not(.intro-done) .hero__cta { opacity: 0; filter: blur(6px); visibility: hidden; }
-.intro-done .hero__cta { transition-delay: 0.1s; }
+/* flèche : un moment après la fin de l'arrivée du logo (cta-ready, main.js : CTA_DELAY) */
+.js:not(.cta-ready) .hero__cta { opacity: 0; filter: blur(6px); visibility: hidden; }
 /* pendant le chargeur et l'arrivée du logo : aucun défilement possible (molette, doigt, barre) */
 .intro-lock, .intro-lock body { overflow: hidden; overscroll-behavior: none; }
 .intro-lock body { touch-action: none; }
@@ -321,6 +320,7 @@ main { position: relative; }   /* pas de contexte d'empilement : le mot de l'acc
 .sec-head { display: grid; gap: 10px; max-width: 760px; }
 .sec-head h2 { font-size: clamp(2.2rem, 3.9vw, 3.6rem); }
 .sec-head .sec-head__sub { max-width: 64ch; }
+@media (min-width: 761px) { .work .sec-head .sec-head__sub { max-width: calc((var(--track-w, 100vw) / 2 - var(--edge-l) - var(--rail-gap) / 2) / 1.3); } }   /* bord droit du texte = bord droit de la première vignette (même largeur que .card) */
 @media (max-width: 760px) { .sec-head { margin-inline: auto; justify-items: center; text-align: center; } }   /* mobile : en-têtes de sections centrés */   /* même couple que les cartes : titre d'affichage + ligne « // » en libellé */
 /* survol de l'adresse du contact : trait irisé aux bouts arrondis, qui se déroule sous les jambages */
 .mail > span { position: relative; display: inline-block; }

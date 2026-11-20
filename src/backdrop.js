@@ -30,7 +30,7 @@ uniform vec4 uB[${N}];  // formes : centre (px CSS, dans la page), rayon (px), p
 uniform float uA[${N}]; // intensité de chaque forme (cycle de vie : naît, s'intensifie, s'éteint)
 ${KIT_IRIS}
 vec3 irisAt(float t) { float a = t * 6.2831853; return irisColor(vec2(sin(a), -cos(a))); }
-const float VEIL = 0.35;   // plus bas = image de l'accueil plus visible sous les couleurs
+uniform float uVeil;    // opacité de la toile : 1 partout, sauf tant que l'image de l'accueil est visible (main.js)
 float hash(vec2 p) { return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
 void main() {
   vec2 s = vec2(gl_FragCoord.x, uRes.y * uDpr - gl_FragCoord.y) / uDpr;   // px CSS, y vers le bas
@@ -59,10 +59,9 @@ void main() {
   float wk = exp(-dot(s - uWash.xy, s - uWash.xy) / (2.0 * WR * WR));
   col = mix(col, uWashCol, clamp(uWash.z * 0.14 * wk * mix(0.8, 1.0, uLight), 0.0, 0.6));
   col += (hash(gl_FragCoord.xy) - 0.5) / 255.0;   // tramage invisible (±0,5/255) : pas de bandes dans les dégradés
-  // voile : la toile n'est opaque qu'à VEIL ; seul son fond uni (base) devient transparent, les couleurs restent entières.
-  // Sur le fond de la page, rien ne change (base ≈ --bg) ; sur l'image de l'accueil (.hero__bg, dessous), elle
-  // remplace le fond uni à (1 − VEIL) : image + couleurs animées par-dessus (alpha prémultiplié)
-  gl_FragColor = vec4(max(col - (1.0 - VEIL) * base, 0.0), VEIL);
+  // voile, seulement tant que l'image de l'accueil (.hero__bg, dessous) est visible : seul le fond uni (base) devient
+  // transparent, les couleurs restent entières (alpha prémultiplié). Ailleurs, la toile est opaque comme avant.
+  gl_FragColor = uVeil >= 0.999 ? vec4(col, 1.0) : vec4(max(col - (1.0 - uVeil) * base, 0.0), uVeil);
 }`
 
 export function createBackdrop(canvas, { reduced }) {
@@ -79,7 +78,7 @@ export function createBackdrop(canvas, { reduced }) {
   gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer())
   gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW)
   gl.enableVertexAttribArray(0); gl.vertexAttribPointer(0, 2, gl.FLOAT, false, 0, 0)
-  const U = {}; for (const n of ['uRes', 'uDpr', 'uScroll', 'uPage', 'uLight', 'uPtr', 'uPtrHue', 'uWash', 'uWashCol', 'uB', 'uA']) U[n] = gl.getUniformLocation(prog, n)
+  const U = {}; for (const n of ['uRes', 'uDpr', 'uScroll', 'uPage', 'uLight', 'uPtr', 'uPtrHue', 'uWash', 'uWashCol', 'uB', 'uA', 'uVeil']) U[n] = gl.getUniformLocation(prog, n)
 
   // thème : --bg du site, relu quand le mode change
   const root = document.documentElement
@@ -179,7 +178,7 @@ export function createBackdrop(canvas, { reduced }) {
     for (let i = 0; i < N; i++) A[i] *= gain
     gl.viewport(0, 0, canvas.width, canvas.height)
     gl.uniform2f(U.uRes, W, H); gl.uniform1f(U.uDpr, dpr); gl.uniform1f(U.uScroll, Math.max(0, scrollY - pin))
-    gl.uniform3f(U.uPage, ...page); gl.uniform1f(U.uLight, light)
+    gl.uniform3f(U.uPage, ...page); gl.uniform1f(U.uLight, light); gl.uniform1f(U.uVeil, veil)
     // teinte du halo : celle de la forme la plus présente sous le curseur ; loin de toute forme, elle glisse lentement
     // le long de la roue ; transitions toujours douces (chemin le plus court sur la roue)
     let best = 0, hueT = hue + dt * 0.012
@@ -202,5 +201,6 @@ export function createBackdrop(canvas, { reduced }) {
     if (gctx && gH && glass.offsetParent) { const c = gctx.canvas, y = Math.round(gTop * dpr); gctx.clearRect(0, 0, c.width, c.height); gctx.drawImage(canvas, 0, y, c.width, c.height, 0, 0, c.width, c.height) }
     if (ectx && eH) { const c = ectx.canvas; ectx.clearRect(0, 0, c.width, c.height); ectx.drawImage(canvas, 0, 0, c.width, c.height, 0, 0, c.width, c.height) }
   }
-  return { frame }
+  let veil = 1
+  return { frame, setVeil(v) { veil = v } }
 }

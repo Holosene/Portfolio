@@ -117,10 +117,23 @@ vec4 halftoneS(vec2 p, vec2 off) {
     // la moyenne ; à 0, toutes les épaisseurs sont égales. Sur l'axe du tracé, la distance au bord vaut la demi-épaisseur
     // locale h : la nouvelle vaut h + (k − 1)(h − moyenne). Carte d'épaisseur lissée : le contour reste continu
     vec4 wc = texture2D(uMaskW, muv);
-    if (uWidthK.x != 0.0) shift += uWidthK.x * (wc.r * 80.0 - uWidthK.y);
     // renflement du S sous le curseur (balle qui passe dans un collant) : le tracé s'épaissit localement, en cloche
     // autour de la balle
-    if (uEye.z > 0.01) { vec2 bd = lp - uEye.xy; shift += uEye.z * exp(-dot(bd, bd) / (2.0 * uEye.w * uEye.w)); }
+    float bul = 0.0;
+    if (uEye.z > 0.01) { vec2 bd = lp - uEye.xy; bul = uEye.z * exp(-dot(bd, bd) / (2.0 * uEye.w * uEye.w)); shift += bul; }
+    if (uWidthK.x != 0.0) {
+      // hors du trait, la carte d'épaisseur saute d'une branche du S à l'autre (creux) : un bord renflé qui l'atteint
+      // ferait une cassure. Au renflement, au-delà de 6 unités du bord (le contour au repos n'y va jamais), l'épaisseur
+      // est lue en revenant vers le bord le long de la pente du champ large (canal B)
+      float wr = wc.r, dB = dc.b * 128.0 - 64.0;
+      if (bul > 0.01 && dB < -6.0) {
+        vec2 ex = vec2(1.0 / 944.0, 0.0), ey = vec2(0.0, 1.0 / 1128.0);
+        vec2 g = vec2(texture2D(uMaskB, muv + ex).b - texture2D(uMaskB, muv - ex).b, texture2D(uMaskB, muv + ey).b - texture2D(uMaskB, muv - ey).b);
+        float gl = length(g);
+        if (gl > 1e-6) wr = texture2D(uMaskW, muv + g / gl * (-dB - 6.0) / vec2(944.0, 1128.0)).r;
+      }
+      shift += uWidthK.x * (wr * 80.0 - uWidthK.y);
+    }
     // apparition du S (uReveal de 0 à 1, après la croissance du « o ») : le S se forme en suivant son tracé, de haut en
     // bas (position le long du tracé : canal B de la carte d'épaisseur, sdf.mjs). Derrière le front, le tracé naît de
     // son axe et prend son épaisseur, avec une boule qui le gonfle un instant au-delà (comme le renflement du survol)
