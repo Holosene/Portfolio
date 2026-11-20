@@ -92,7 +92,7 @@ function themeHead() {
       const { colors } = JSON.parse(readFileSync(resolve('design/logo-kit/tokens/iris.json'), 'utf8'))
       // site en clair (les fiches projet, en sombre, sont des calques dans la page)
       // page en sombre d'emblée (data-theme="dark" dans le HTML : holosene.fr) : fond sombre du site (src/theme.css)
-      const bg = /<html[^>]*data-theme="dark"/.test(html) ? '#000000' : '#FFFFFF'   // fonds unis (src/theme.css)
+      const bg = /<html[^>]*data-theme="dark"/.test(html) ? '#0D0D0D' : colors.bgLight
       const meta = `<meta name="theme-color" content="${bg}" />`
       // toujours en clair au chargement (data-theme="light" dans le HTML), sur tous les appareils, quel que soit le mode du
       // système ; le bouton Clair / Sombre ne vaut que pour la visite (main.js). Les anciens choix mémorisés par une

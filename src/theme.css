@@ -7,14 +7,13 @@
 
 /* thème de l'appareil (prefers-color-scheme) ; s'il n'en indique aucun : clair. Le bouton de la barre du haut peut forcer
    l'autre mode (data-theme sur <html>, mémorisé). */
-/* fonds unis (choix de Johann, 20 nov. 2026) : blanc pur en clair, noir pur en sombre, sans couleur ni dégradé */
 :root {
   color-scheme: light;
-  --bg: #FFFFFF;
+  --bg: var(--bg-light);
   --ink: var(--bg-dark);
 }
-:root[data-theme="light"] { color-scheme: light; --bg: #FFFFFF; --ink: var(--bg-dark); }
-:root[data-theme="dark"] { color-scheme: dark; --bg: #000000; --ink: white; }
+:root[data-theme="light"] { color-scheme: light; --bg: var(--bg-light); --ink: var(--bg-dark); }
+:root[data-theme="dark"] { color-scheme: dark; --bg: #0D0D0D; --ink: white; }   /* sombre : nettement plus noir que le #1E1E1E du kit */
 
 /* fiches projet : même mode (clair ou sombre) que l'accueil, elles en héritent */
 

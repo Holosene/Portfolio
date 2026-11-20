@@ -79,8 +79,13 @@ a { color: inherit; }
 /* mode clair : verre dépoli de la barre en flou progressif (5 couches empilées, flou doublé à chaque couche de 1 à 16 px, chacune
    visible sur une bande ; le flou croît vers le haut, sans palier) ; il descend sous les liens pour que le dégradé
    finisse en dessous d'eux ; voile léger dégradé par-dessus */
-.topbar__glass { display: none; position: absolute; left: 0; right: 0; top: 0; height: calc((100% + 48px) / 1.3); z-index: -1; pointer-events: none; background: linear-gradient(color-mix(in srgb, white 72%, transparent), color-mix(in srgb, white 34%, transparent) 55%, transparent); }   /* voile blanc : boutons et liens mieux contrastés */
+.topbar__glass { display: none; position: absolute; left: 0; right: 0; top: 0; height: calc((100% + 48px) / 1.3); z-index: -1; pointer-events: none; background: linear-gradient(color-mix(in srgb, white 72%, transparent), color-mix(in srgb, white 34%, transparent) 55%, transparent); }   /* voile blanc (repli sans WebGL) : boutons et liens mieux contrastés */
 .topbar__glass i { position: absolute; inset: 0; }
+/* avec le fond WebGL : le voile blanc est remplacé par une copie du fond (backdrop.js), même profil d'opacité ; le contenu
+   s'efface sous les liens sans que les couleurs du fond blanchissent */
+.topbar__glass.glass--live { background: none; }
+.topbar__bg { position: absolute; inset: 0; width: 100%; height: 100%; display: block;
+  -webkit-mask: linear-gradient(rgb(0 0 0 / 0.720) 0%, rgb(0 0 0 / 0.700) 10%, rgb(0 0 0 / 0.645) 20%, rgb(0 0 0 / 0.564) 30%, rgb(0 0 0 / 0.467) 40%, rgb(0 0 0 / 0.360) 50%, rgb(0 0 0 / 0.253) 60%, rgb(0 0 0 / 0.156) 70%, rgb(0 0 0 / 0.075) 80%, rgb(0 0 0 / 0.020) 90%, rgb(0 0 0 / 0.000) 100%); mask: linear-gradient(rgb(0 0 0 / 0.720) 0%, rgb(0 0 0 / 0.700) 10%, rgb(0 0 0 / 0.645) 20%, rgb(0 0 0 / 0.564) 30%, rgb(0 0 0 / 0.467) 40%, rgb(0 0 0 / 0.360) 50%, rgb(0 0 0 / 0.253) 60%, rgb(0 0 0 / 0.156) 70%, rgb(0 0 0 / 0.075) 80%, rgb(0 0 0 / 0.020) 90%, rgb(0 0 0 / 0.000) 100%); }   /* courbe douce (smoothstep) : pente nulle en bas, aucune limite visible */
 /* flou de la barre : seulement quand le contenu passe dessous (après la scène de l'accueil) ; sur l'accueil et pendant
    le chargement, la barre n'a que ses liens. Sans fondu d'opacité : pendant un fondu, le navigateur coupe le flou des
    calques puis le rétablit d'un coup (à-coup visible) */
@@ -125,6 +130,12 @@ a { color: inherit; }
 .edge--top { top: 0; height: 92px; background: linear-gradient(180deg, color-mix(in srgb, var(--bg) 88.0%, transparent) 0%, color-mix(in srgb, var(--bg) 69.8%, transparent) 10%, color-mix(in srgb, var(--bg) 53.9%, transparent) 20%, color-mix(in srgb, var(--bg) 40.2%, transparent) 30%, color-mix(in srgb, var(--bg) 28.6%, transparent) 40%, color-mix(in srgb, var(--bg) 19.2%, transparent) 50%, color-mix(in srgb, var(--bg) 11.7%, transparent) 60%, color-mix(in srgb, var(--bg) 6.2%, transparent) 70%, color-mix(in srgb, var(--bg) 2.6%, transparent) 80%, color-mix(in srgb, var(--bg) 0.6%, transparent) 90%, color-mix(in srgb, var(--bg) 0.0%, transparent) 100%); }
 @media (min-width: 769px) { .edge--top { height: 74px; } }   /* PC : fondu du haut plus court */
 .edge--bottom { bottom: 0; height: 120px; background: linear-gradient(0deg, color-mix(in srgb, var(--bg) 88.0%, transparent) 0%, color-mix(in srgb, var(--bg) 69.8%, transparent) 10%, color-mix(in srgb, var(--bg) 53.9%, transparent) 20%, color-mix(in srgb, var(--bg) 40.2%, transparent) 30%, color-mix(in srgb, var(--bg) 28.6%, transparent) 40%, color-mix(in srgb, var(--bg) 19.2%, transparent) 50%, color-mix(in srgb, var(--bg) 11.7%, transparent) 60%, color-mix(in srgb, var(--bg) 6.2%, transparent) 70%, color-mix(in srgb, var(--bg) 2.6%, transparent) 80%, color-mix(in srgb, var(--bg) 0.6%, transparent) 90%, color-mix(in srgb, var(--bg) 0.0%, transparent) 100%); }
+/* fondu du haut de l'accueil : la bande haute du fond (backdrop.js) remplace le voile uni, avec le même profil d'opacité ;
+   les formes colorées du fond ne sont plus recouvertes de blanc, seul le contenu s'efface */
+.edge--live { background: none !important; }
+.edge__bg { position: absolute; inset: 0; width: 100%; height: 100%; display: block;
+  -webkit-mask: linear-gradient(180deg, rgb(0 0 0 / .88) 0%, rgb(0 0 0 / .698) 10%, rgb(0 0 0 / .539) 20%, rgb(0 0 0 / .402) 30%, rgb(0 0 0 / .286) 40%, rgb(0 0 0 / .192) 50%, rgb(0 0 0 / .117) 60%, rgb(0 0 0 / .062) 70%, rgb(0 0 0 / .026) 80%, rgb(0 0 0 / .006) 90%, transparent 100%);
+  mask: linear-gradient(180deg, rgb(0 0 0 / .88) 0%, rgb(0 0 0 / .698) 10%, rgb(0 0 0 / .539) 20%, rgb(0 0 0 / .402) 30%, rgb(0 0 0 / .286) 40%, rgb(0 0 0 / .192) 50%, rgb(0 0 0 / .117) 60%, rgb(0 0 0 / .062) 70%, rgb(0 0 0 / .026) 80%, rgb(0 0 0 / .006) 90%, transparent 100%); }
 .edge-bottom-off .edge--bottom { visibility: hidden !important; }
 .edge--bottom { clip-path: inset(0 0 var(--band-push, 0px) 0); }   /* coupée au bord haut du pied de page (main.js) : il n'est jamais flouté */
 /* mode clair : un voile clair en fondu blanchit le contenu ; à la place, flou progressif (backdrop-filter masqué en dégradé,
@@ -167,6 +178,11 @@ a { color: inherit; }
 }
 
 /* toile WebGL : fixe, derrière tout le contenu ; les vues [data-gl] y sont dessinées à leur place */
+.bg-canvas { position: fixed; inset: 0 0 auto 0; width: 100%; height: 100lvh; z-index: -2; pointer-events: none; }
+/* fond : invisible pendant le chargement, il arrive en fondu une fois tout chargé */
+.js .bg-canvas { opacity: 0; transition: opacity 2.6s cubic-bezier(0.33, 0, 0.2, 1); }   /* fond : apparition lente et fondue */
+.js.is-loaded .bg-canvas { opacity: 1; }
+@media (prefers-reduced-motion: reduce) { .js .bg-canvas { transition: none; } }
 /* la scène d'accueil passe sous la toile WebGL : le logo est dessiné devant le mot HOLO / SENE */
 .hero__pin { z-index: -1; }
 .gl-canvas { position: fixed; inset: 0 0 auto 0; width: 100%; height: 100lvh; z-index: 0; pointer-events: none; }

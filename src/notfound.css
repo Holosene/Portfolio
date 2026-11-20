@@ -1,4 +1,5 @@
 /* Page 404 : centrée, un seul message ; le « 0 » de 404 est l'anneau du kit (rayon intérieur 0,514) */
+.page-404 .bg-canvas { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
 .nf {
   position: relative; z-index: 1; min-height: 100svh; box-sizing: border-box;
   display: grid; place-content: center; justify-items: center; text-align: center;
