@@ -28,7 +28,7 @@ Tout ce qui touche au logo, au « o » irisé ou à l'anneau de la lentille du c
 
 ### Exception voulue : anneau de la lentille du curseur (vignettes)
 - Son bord **intérieur** est volontairement fondu (choix de Johann) : dégradé de flou sur 11 % du rayon (`SOFT_W` dans
-  `src/gl.js`). La loupe se resserre d'autant et garde son effet à l'intérieur.
+  `src/gl.js`). À l'intérieur : l'image d'origine, nette, sans effet de loupe (choix de Johann, 21 novembre 2026).
   Ne pas « corriger » ce fondu ; le bord extérieur, les couleurs et l'épaisseur restent ceux du kit.
 
 ### Mettre à jour le logo depuis un export Figma

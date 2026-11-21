@@ -62,7 +62,7 @@ uniform vec2 uLv;       // niveaux de l'image (lumière du point le plus sombre 
 uniform float uRadius;  // coins arrondis (0 : aucun)
 uniform vec3 uLens;     // centre (px CSS), rayon intérieur
 uniform float uLensO;   // rayon extérieur de l'anneau
-uniform float uSoft;    // largeur (px) du fondu intérieur de l'anneau ; la loupe se resserre d'autant
+uniform float uSoft;    // largeur (px) du fondu intérieur de l'anneau
 uniform float uGlass;   // survol d'une carte : bord de verre (0 à 1)
 uniform vec4 uClip;     // piste horizontale : bords gauche et droit (px, dans la vue), largeur du fondu
 uniform sampler2D uText; // texte net de la vignette (alpha), à la résolution de l'écran
@@ -233,7 +233,7 @@ float sdInner(vec2 p, float w) {
   return length(max(q, 0.0)) + min(max(q.x, q.y), 0.0) - r;
 }
 
-// lentille du curseur en un point q (couleur de fond base) : image d'origine, bord intérieur « verre liquide », anneau du kit
+// lentille du curseur en un point q (couleur de fond base) : image d’origine nette, anneau du kit
 vec3 withLens(vec2 q, vec3 base) {
   float aa = 0.9 / uDpr;
   float R = uLens.z;
@@ -242,34 +242,12 @@ vec3 withLens(vec2 q, vec3 base) {
     vec2 lp = q - uLens.xy;
     float d = length(lp);
     if (d < uLensO + 2.0) {
-      // uSoft = largeur du fondu intérieur de l'anneau (px) : la loupe se resserre d'autant (rayon Re) et garde tout son
-      // effet à l'intérieur ; la bande entre Re et l'anneau est à part : le fondu de l'anneau s'y pose sans rien recouvrir
-      // de la loupe (on y prolonge simplement le bord de la loupe, le long du rayon)
-      float Re = R - uSoft, dd = min(d, Re);
-      vec2 dir = d > 0.001 ? lp / d : vec2(0.0), le = dir * dd;
-      // seul effet de la lentille : au bord intérieur, sur une bande contre l'anneau, l'image
-      // est tirée vers le centre (bande des 31 % extérieurs) ; le centre reste net et non déformé (pas de fisheye)
-      float r = dd / Re, k = smoothstep(0.69, 1.0, r);
-      float bend = 0.36 * k * k;
-      // fondu de flou en dégradé sur le pourtour intérieur : nul au centre, il croît sur le tiers extérieur jusqu'à
-      // ≈ 5 px contre le bord (8 échantillons en cercle + le centre : flou lisse, sans marches)
-      float kb = smoothstep(0.72, 1.0, r), bl = 0.6 + 4.6 * kb * kb;
+      vec2 le = lp;
+      // intérieur de l'anneau : l'image d'origine, nette, sans effet de loupe (ni déformation, ni flou, ni teinte :
+      // choix de Johann, 21 novembre 2026)
       vec2 c0 = uLens.xy;
-      vec3 orig = vec3(0.0);
-      for (int i = 0; i < 9; i++) {
-        float an = float(i) * 0.785398;
-        vec2 o = i == 8 ? vec2(0.0) : vec2(cos(an), sin(an)) * bl;
-        orig += vec3(texture2D(uTex, cover(c0 + le * (1.0 - bend * 1.012) + o)).r,
-                     texture2D(uTex, cover(c0 + le * (1.0 - bend) + o)).g,
-                     texture2D(uTex, cover(c0 + le * (1.0 - bend * 0.988) + o)).b);
-      }
-      orig /= 9.0;
-      if (uHasText > 0.5) orig = mix(orig, vec3(1.0), texture2D(uText, (c0 + le * (1.0 - bend)) / uRes).a);   // le texte est grossi comme l'image
-      // légère teinte irisée en dégradé : rien au centre, au plus 14 % au bord, couleur de la roue « flux » du kit à cet
-      // angle (la même que l'anneau juste à côté : la teinte semble rayonner de l'anneau)
-      float kt = smoothstep(0.3, 1.0, r); kt *= kt;
-      orig = mix(orig, flowColor(lp), 0.14 * kt);
-      orig += vec3(0.18) * exp(-(Re - dd) / 1.5) * max(dot(dir, normalize(vec2(-0.6, -0.8))), 0.0) * (1.0 - smoothstep(Re, Re + 2.0, d)) * (1.0 - clamp(uSoft / 4.0, 0.0, 1.0));   // reflet du bord : effacé (aucune limite visible sous le fondu)
+      vec3 orig = texture2D(uTex, cover(c0 + le)).rgb;
+      if (uHasText > 0.5) orig = mix(orig, vec3(1.0), texture2D(uText, (c0 + le) / uRes).a);
       float inner = 1.0 - smoothstep(R - aa, R + aa, d);
       col = mix(col, orig, inner);
       // anneau (de R − 1 à uLensO), couleurs du kit, dessiné DANS la vue : coupé par le bord de la vignette et déformé avec

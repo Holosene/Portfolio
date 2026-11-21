@@ -155,7 +155,7 @@ export function render(lang) {
 <main id="top">
   <section class="hero" id="accueil" aria-labelledby="hero-t">
     <span class="hero__dock" aria-hidden="true"><img class="only-dark" src="${root}media/monogram-dark-base.svg?v=${MONO_V}" alt="" width="470" height="576" draggable="false"><img class="only-light" src="${root}media/monogram-light-base.svg?v=${MONO_V}" alt="" width="470" height="576" draggable="false"></span>
-    <img class="hero__bg" src="${root}media/accueil-fond.webp" srcset="${root}media/accueil-fond-1000.webp 1000w, ${root}media/accueil-fond.webp 2000w" sizes="100vw" alt="" width="2000" height="1237" decoding="async" draggable="false">
+    <video class="hero__bg" src="${root}media/accueil-montage.mp4" poster="${root}media/accueil-fond.webp" width="1280" height="800" muted loop playsinline preload="none" aria-hidden="true" tabindex="-1" disablepictureinpicture></video>
     <div class="hero__pin">
       <div class="hero__view" data-gl="mark" data-cell="6" role="img" aria-label="${esc(t(ui.lensLabel))}">
         <img src="${m('riviere-calme.webp')}" alt="" decoding="async" fetchpriority="high">

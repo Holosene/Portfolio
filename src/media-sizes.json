@@ -11,10 +11,6 @@
 537,
 354
 ],
-"4derives/077.webp": [
-1234,
-354
-],
 "4derives/078.webp": [
 704,
 464
@@ -62,46 +58,6 @@
 "mondes-immerges/013.webp": [
 1165,
 997
-],
-"photographique-volume/017.webp": [
-972,
-641
-],
-"photographique-volume/018.webp": [
-1200,
-792
-],
-"photographique-volume/027.webp": [
-370,
-366
-],
-"photographique-volume/028.webp": [
-1200,
-792
-],
-"photographique-volume/029.webp": [
-1200,
-969
-],
-"photographique-volume/030.webp": [
-1200,
-972
-],
-"photographique-volume/031.webp": [
-634,
-515
-],
-"photographique-volume/033.webp": [
-1000,
-581
-],
-"photographique-volume/034.webp": [
-1200,
-751
-],
-"photographique-volume/036.webp": [
-1600,
-822
 ],
 "riviere-calme.webp": [
 703,
@@ -187,14 +143,6 @@
 1600,
 900
 ],
-"voyageur-1/recit-2.webp": [
-1920,
-1080
-],
-"duo-news/mains-ouvert.webp": [
-2122,
-1415
-],
 "duo-news/vignette-sombre.webp": [
 2000,
 1250
@@ -212,10 +160,6 @@
 1250
 ],
 "dumbo/hublot.webp": [
-2000,
-1250
-],
-"dumbo/meduse.webp": [
 2000,
 1250
 ],
@@ -255,14 +199,6 @@
 2000,
 1250
 ],
-"mondes-immerges-site/documentaire-galerie.webp": [
-2000,
-1250
-],
-"mondes-immerges-site/documentaire-visages.webp": [
-2000,
-1250
-],
 "mondes-immerges-site/documentaire.webp": [
 2000,
 1250
@@ -277,11 +213,11 @@
 ],
 "mondes-immerges-site/globe-voyage-poster.webp": [
 1600,
-900
+1000
 ],
 "mondes-immerges-site/globe-voyage.mp4": [
 1600,
-900
+1000
 ],
 "mondes-immerges-site/vignette-mobile.webp": [
 845,
@@ -290,5 +226,61 @@
 "mondes-immerges-site/vignette.webp": [
 1384,
 845
+],
+"dumbo/retour.webp": [
+2000,
+1250
+],
+"photographique-volume/plongee-poster.webp": [
+1600,
+1000
+],
+"photographique-volume/plongee.mp4": [
+1600,
+1000
+],
+"photographique-volume/posidonie.webp": [
+2000,
+1250
+],
+"photographique-volume/posidonie-cellules.webp": [
+2000,
+1250
+],
+"photographique-volume/roche.webp": [
+2000,
+1250
+],
+"photographique-volume/large.webp": [
+2000,
+1215
+],
+"photographique-volume/vignette.webp": [
+1384,
+845
+],
+"mondes-immerges-site/courants.mp4": [
+1600,
+1000
+],
+"mondes-immerges-site/courants-poster.webp": [
+1600,
+1000
+],
+"mondes-immerges-site/courant-aiguilles.webp": [
+960,
+600
+],
+"mondes-immerges-site/canal-mozambique.webp": [
+960,
+600
+],
+"mondes-immerges-site/mobile-accueil.webp": [
+1424,
+2532
+],
+"mondes-immerges-site/mobile-documentaire.webp": [
+1424,
+2532
 ]
 }

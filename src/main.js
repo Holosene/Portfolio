@@ -529,6 +529,13 @@ function showCard(card) {
 /* Accueil : le nom apparaît en balayage, la présentation s'allume ; les grands textes s'allument mot à mot au défilement. */
 const hero = document.querySelector('.hero')
 const heroBg = document.querySelector('.hero__bg'); let heroBgV = -1   // image de fond de l'accueil (styles.css, .hero__bg)
+// montage vidéo des projets (3 à 5 s chacun, le caïman en ouverture et en image d'attente) : lu en boucle seulement
+// quand il est visible, jamais avec « réduire les animations » (l'image d'attente reste alors seule)
+const heroBgPlay = (on) => {
+  if (!heroBg || !heroBg.play || reduced) return
+  if (on && heroBg.paused && root.classList.contains('intro-done')) { heroBg.preload = 'auto'; heroBg.play().catch(() => {}) }
+  else if (!on && !heroBg.paused) heroBg.pause()
+}
 let heroWords = [...document.querySelectorAll('.hero__line .w')]
 if (!heroWords.length) root.classList.add('hero-done')   // pages sans accueil : tout est visible d'emblée
 let heroOn = -1
@@ -699,7 +706,7 @@ function scrollEffects() {
   // le nom commence (0,42) ; l'arrière-plan reprend alors toute la place. filter, pas opacity : l'opacité porte le
   // fondu d'arrivée (1,6 s), le défilement doit répondre sans retard
   if (heroBg) { const t = k(0, 0.4), v = Math.round((1 - t * t * (3 - 2 * t)) * 1000) / 1000
-    if (v !== heroBgV) { heroBgV = v; heroBg.style.filter = v >= 1 ? '' : `opacity(${v})`; heroBg.style.visibility = v <= 0 ? 'hidden' : ''; backdrop?.setVeil(1 - 0.65 * v) } }
+    if (v !== heroBgV) { heroBgV = v; heroBg.style.filter = v >= 1 ? '' : `opacity(${v})`; heroBg.style.visibility = v <= 0 ? 'hidden' : ''; heroBgPlay(v > 0); backdrop?.setVeil(1 - 0.65 * v) } }
   wordBlocks.forEach((b, j) => {
     const r = blockRects[j]
     const p = Math.min(1, Math.max(0, (vh * 0.85 - r.top) / (r.height + vh * 0.25)))
@@ -783,6 +790,7 @@ const endIntro = () => {
     root.classList.remove('intro-lock')
   }
   root.classList.add('intro-done')
+  heroBgPlay(heroBgV !== 0)   // montage de l'accueil : démarre avec le fondu d'arrivée
   setTimeout(() => root.classList.add('cta-ready'), CTA_DELAY)   // flèche : un moment après l'arrivée (styles.css)
   // toujours : le défilement doux démarre (y compris sur les pages sans intro, où il restait arrêté)
   if (!ficheOf()) lenis?.start()
