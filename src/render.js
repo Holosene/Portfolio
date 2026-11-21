@@ -156,7 +156,7 @@ export function render(lang) {
 <main id="top">
   <section class="hero" id="accueil" aria-labelledby="hero-t">
     <span class="hero__dock" aria-hidden="true"><img class="only-dark" src="${root}media/monogram-dark-base.svg?v=${MONO_V}" alt="" width="470" height="576" draggable="false"><img class="only-light" src="${root}media/monogram-light-base.svg?v=${MONO_V}" alt="" width="470" height="576" draggable="false"></span>
-    <video class="hero__bg" poster="${root}media/accueil-fond.webp" width="1920" height="1200" muted loop playsinline preload="none" aria-hidden="true" tabindex="-1" disablepictureinpicture><source src="${root}media/accueil-montage-1280.mp4" type="video/mp4" media="(max-width: 900px)"><source src="${root}media/accueil-montage.mp4" type="video/mp4"></video>
+    <video class="hero__bg" poster="${root}media/accueil-fond.webp" data-hls="${root}media/accueil/montage.m3u8" width="3840" height="2400" muted loop playsinline preload="none" aria-hidden="true" tabindex="-1" disablepictureinpicture><source src="${root}media/accueil-montage-1280.mp4" type="video/mp4" media="(max-width: 900px)"><source src="${root}media/accueil-montage.mp4" type="video/mp4"></video>
     <div class="hero__pin">
       <div class="hero__view" data-gl="mark" data-cell="6" role="img" aria-label="${esc(t(ui.lensLabel))}">
         <img src="${m('riviere-calme.webp')}" alt="" decoding="async" fetchpriority="high">

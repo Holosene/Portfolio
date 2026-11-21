@@ -188,7 +188,7 @@ export const projects = [
     role: TODO('ton rôle', 'your role'),
     tools: 'Three.js, SHARP, Spark (Gaussian splatting), Web Audio',
     credits: [T('Photographies © Nicolas Floc’h', 'Photographs © Nicolas Floc’h'), T('Reconstruction 3D : SHARP, sous licence Apple Machine Learning Research Model', '3D reconstruction: SHARP, under the Apple Machine Learning Research Model License')],
-    link: { label: T('Ouvrir le projet', 'Open the project'), href: 'https://holosene.github.io/photographique-volume' },
+    link: { label: T('Ouvrir le projet', 'Open the project'), href: 'https://johann-ar.github.io/Photographique-volume/' },
     media: [
       // la plongée en vidéo, puis des détails de près (gaussiennes, cellules), puis la dernière photo, au large
       { src: 'photographique-volume/plongee.mp4', poster: 'photographique-volume/plongee-poster.webp', alt: T('Plongée dans une photographie : l’image se creuse puis se défait en cellules', 'Diving into a photograph: the image hollows out, then breaks into cells') },

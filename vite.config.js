@@ -154,7 +154,7 @@ function csp() {
           .map((m) => `'sha256-${createHash('sha256').update(m[1]).digest('base64')}'`)
         const policy = [
           "default-src 'self'", `script-src 'self' ${hashes.join(' ')}`.trim(), "style-src 'self' 'unsafe-inline'",
-          "img-src 'self' data: blob:", "font-src 'self'", "connect-src 'self'", "media-src 'self'", "worker-src 'self'",
+          "img-src 'self' data: blob:", "font-src 'self'", "connect-src 'self'", "media-src 'self' blob:", "worker-src 'self'",
           "object-src 'none'", "base-uri 'self'", "form-action 'none'",   // HTTPS : imposé par l'hébergeur (HSTS)
         ].join('; ')
         html = html.replace(/<meta http-equiv="Content-Security-Policy"[^>]*>\s*/, '')
