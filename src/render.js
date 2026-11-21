@@ -5,7 +5,7 @@
  */
 import { readFileSync, existsSync } from 'node:fs'
 import { createHash } from 'node:crypto'
-import { site, ui, projects as allProjects, research, studio, workIntro } from './content.js'
+import { site, ui, projects as allProjects, research, studio, workIntro, about } from './content.js'
 import sizes from './media-sizes.json' with { type: 'json' }
 import { logotypeSvg, resetLogotypes } from './logotype-svg.js'
 
@@ -186,7 +186,9 @@ export function render(lang) {
     ${rail(lastOngoing(research.items.filter((r) => !r.hidden)).map((r, i) => card({ id: `recherche-${r.slug || i + 1}`, href: r.href, image: t(r.image), pos: r.pos, text: r.label && t(r.label), badge: r.when && t(r.when), title: t(r.title), genre: t(r.kind), todo: r.todo })), lang === 'fr' ? 'Recherche, défilement horizontal' : 'Research, horizontal scroll')}
   </section>
 
-  <section class="about wrap" id="a-propos" aria-labelledby="contact-t">   <!-- plus de texte « À propos » (choix de Johann) : le contact seul -->
+  <section class="about wrap" id="a-propos" aria-labelledby="about-t">   <!-- texte « À propos » puis le contact ; plus de bouton « À propos » dans le menu (choix de Johann) -->
+    <h2 class="disp" id="about-t" data-sw>${seq(t(ui.studio))}</h2>
+    ${about.map((a) => `<p data-sw>${seq(t(a))}</p>`).join('')}
     <div class="contact" id="contact">
       <h2 class="disp" id="contact-t" data-sw>${seq(t(ui.contact))}</h2>
       <a class="mail" href="mailto:${esc(site.email)}" translate="no" aria-label="${esc(site.email)}, ${esc(t(ui.copy))}" data-copy="${esc(site.email)}" data-done="${esc(t(ui.copied))}"><span data-sw data-sw-letters aria-hidden="true">${[...site.email].map((ch, i) => `<span class="w" style="--i:${i}">${esc(ch)}</span>`).join('')}</span></a>

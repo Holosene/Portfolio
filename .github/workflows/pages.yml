@@ -1,7 +1,7 @@
-# Publie le site compilé sur GitHub Pages (https://johann-ar.github.io/Portfolio/), en plus de Vercel.
+# Publie le site compilé sur GitHub Pages (johann-ar.github.io/Portfolio/), servi sous https://holosene.fr/ par le
+# Worker Cloudflare (cloudflare/holosene-worker) : la page HOLOSENE à la racine, le portfolio dans /portfolio/
+# (scripts/site-holosene.mjs), les projets dans /portfolio/<nom>/ (relayés depuis leur propre dépôt).
 # GitHub Pages ne compile rien : sans ce workflow, il servait les fichiers sources (index.html non compilé, page vide).
-# Le site y est publié dans le dossier /Portfolio/ (BASE_PATH, pour les liens de la page 404) ; l'adresse de référence
-# (canonical, sitemap) reste celle de Vercel.
 name: GitHub Pages
 
 on:
@@ -30,13 +30,15 @@ jobs:
       - run: npm ci
       - run: npm run build
         env:
-          BASE_PATH: /Portfolio/
+          BASE_PATH: /portfolio/
+          SITE_URL: https://holosene.fr/portfolio/
       # pas de mise en ligne si FR/EN recharge la page (scripts/test-lang.mjs)
       - run: npx playwright install --with-deps chromium
       - run: npm run test:lang
+      - run: node scripts/site-holosene.mjs
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: dist
+          path: dist-site
 
   deploy:
     needs: build

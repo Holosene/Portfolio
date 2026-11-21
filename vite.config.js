@@ -5,7 +5,7 @@ import { pathToFileURL } from 'node:url'
 import { defineConfig } from 'vite'
 
 /** Adresse publique (aperçus de liens, URL canonique, hreflang). À changer avec un nom de domaine. */
-const SITE_URL = (process.env.SITE_URL || 'https://holosene.vercel.app/').replace(/\/?$/, '/')
+const SITE_URL = (process.env.SITE_URL || 'https://holosene.fr/portfolio/').replace(/\/?$/, '/')
 
 /** Pré-rendu : le contenu (src/render.js) et les métadonnées sont écrits dans le HTML publié, pour chaque langue. */
 function prerender() {
@@ -124,7 +124,7 @@ function seoFiles() {
 }
 
 /** 404 : l'hébergeur la sert à n'importe quelle adresse, ses liens doivent donc être absolus, et commencer par le dossier
- *  où le site est publié : « / » sur Vercel, « /Portfolio/ » sur GitHub Pages (BASE_PATH, fixé par le workflow pages.yml). */
+ *  où le site est publié : « /portfolio/ » sur holosene.fr (BASE_PATH du workflow pages.yml). */
 function absolute404() {
   const basePath = (process.env.BASE_PATH || new URL(SITE_URL).pathname).replace(/\/?$/, '/')
   return {

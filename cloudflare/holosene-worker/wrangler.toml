@@ -1,0 +1,10 @@
+# Worker de holosene.fr (voir worker.js). Les deux domaines personnalisés créent eux-mêmes leurs enregistrements DNS
+# chez Cloudflare : les anciens enregistrements de holosene.fr et www (parking Hostinger) doivent être supprimés avant.
+name = "holosene"
+main = "worker.js"
+compatibility_date = "2026-10-01"
+workers_dev = false
+routes = [
+  { pattern = "holosene.fr", custom_domain = true },
+  { pattern = "www.holosene.fr", custom_domain = true },
+]

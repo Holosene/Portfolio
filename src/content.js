@@ -13,7 +13,7 @@ export const site = {
   name: 'Holosene',
   person: 'Johann Arata',
   email: 'arata.johann@gmail.com',
-  url: 'https://holosene.vercel.app/',
+  url: 'https://holosene.fr/portfolio/',
   intent: T(
     'Je conçois des expériences interactives, du concept au prototype codé.',
     'I design interactive experiences, from concept to coded prototype.',
@@ -146,7 +146,7 @@ export const projects = [
       T('Musique : Teimo (Schluss), Thomas Köner', 'Music: Teimo (Schluss), Thomas Köner'),
       TODO('mention exacte exigée par la licence du Schmidt Ocean Institute', 'exact licence wording'),
     ],
-    link: { label: T('Ouvrir le projet', 'Open the project'), href: 'https://johann-ar.github.io/Dumbo-biovolume/' },
+    link: { label: T('Ouvrir le projet', 'Open the project'), href: 'https://holosene.fr/portfolio/dumbo-biovolume/' },
     media: [
       // ordre de la visite : l'accueil, l'entrée dans la salle, la nef, les créatures derrière les écrans, les visiteurs
       { src: 'dumbo/accueil.webp', alt: T('L’accueil du site : Dumbo, présences abyssales rares', 'The site’s home screen: Dumbo, rare abyssal presences') },
@@ -188,7 +188,7 @@ export const projects = [
     role: TODO('ton rôle', 'your role'),
     tools: 'Three.js, SHARP, Spark (Gaussian splatting), Web Audio',
     credits: [T('Photographies © Nicolas Floc’h', 'Photographs © Nicolas Floc’h'), T('Reconstruction 3D : SHARP, sous licence Apple Machine Learning Research Model', '3D reconstruction: SHARP, under the Apple Machine Learning Research Model License')],
-    link: { label: T('Ouvrir le projet', 'Open the project'), href: 'https://johann-ar.github.io/Photographique-volume/' },
+    link: { label: T('Ouvrir le projet', 'Open the project'), href: 'https://holosene.fr/portfolio/photographique-volume/' },
     media: [
       // la plongée en vidéo, puis des détails de près (gaussiennes, cellules), puis la dernière photo, au large
       { src: 'photographique-volume/plongee.mp4', poster: 'photographique-volume/plongee-poster.webp', alt: T('Plongée dans une photographie : l’image se creuse puis se défait en cellules', 'Diving into a photograph: the image hollows out, then breaks into cells') },
@@ -275,7 +275,7 @@ export const projects = [
       T('Photos d’archives : NASA / JPL-Caltech, NASA / KSC', 'Archive photos: NASA / JPL-Caltech, NASA / KSC'),
       T('Projet indépendant, ni produit ni approuvé par la NASA', 'Independent project, not produced or endorsed by NASA'),
     ],
-    link: { label: T('Ouvrir le projet', 'Open the project'), href: 'https://johann-ar.github.io/Voyageur-1/' },   // le site en ligne (le code : github.com/Johann-Ar/Voyageur-1)
+    link: { label: T('Ouvrir le projet', 'Open the project'), href: 'https://holosene.fr/portfolio/voyageur-1/' },   // le site en ligne (le code : github.com/Johann-Ar/Voyageur-1)
     media: [
       // ordre de l'expérience : l'accueil, le récit, le disque et ses images, une image en volume, la galerie
       { src: 'voyageur-1/accueil.webp', dark: 'voyageur-1/accueil-sombre.webp', alt: T('L’accueil du site', 'The site’s home screen') },
@@ -366,7 +366,7 @@ export const projects = [
       T('Relief et bathymétrie : NOAA ETOPO1 ; fleuves : Natural Earth', 'Relief and bathymetry: NOAA ETOPO1; rivers: Natural Earth'),
       T('Projet étudiant, ni produit ni approuvé par National Geographic', 'Student project, not produced or endorsed by National Geographic'),
     ],
-    link: { label: T('Ouvrir le projet', 'Open the project'), href: 'https://johann-ar.github.io/Mondes-immerges/' },
+    link: { label: T('Ouvrir le projet', 'Open the project'), href: 'https://holosene.fr/portfolio/mondes-immerges/' },
     media: [
       // ordre de l'expérience : l'accueil, le globe et ses films, la page d'un documentaire
       { src: 'mondes-immerges-site/accueil.webp', alt: T('L’accueil : le globe tourne, porté par les courants', 'The home screen: the globe turns, carried by the currents') },
