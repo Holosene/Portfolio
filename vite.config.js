@@ -146,7 +146,7 @@ function csp() {
     name: 'csp',
     apply: 'build',
     closeBundle() {
-      for (const page of ['index.html', 'en/index.html', 'mentions-legales.html', '404.html', 'holosene/index.html']) {
+      for (const page of ['index.html', 'en/index.html', 'mentions-legales.html', 'en/mentions-legales.html', '404.html', 'holosene/index.html']) {
         const f = resolve(join('dist', page))
         if (!existsSync(f)) continue
         let html = readFileSync(f, 'utf8')
@@ -171,7 +171,7 @@ export default defineConfig({
   build: {
     target: 'es2022',
     rollupOptions: {
-      input: { fr: resolve('index.html'), en: resolve('en/index.html'), legal: resolve('mentions-legales.html'), notfound: resolve('404.html'), holosene: resolve('holosene/index.html') },
+      input: { fr: resolve('index.html'), en: resolve('en/index.html'), legal: resolve('mentions-legales.html'), legalEn: resolve('en/mentions-legales.html'), notfound: resolve('404.html'), holosene: resolve('holosene/index.html') },
     },
   },
 })
