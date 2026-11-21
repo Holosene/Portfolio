@@ -112,133 +112,6 @@ export const projects = [
     ],
   },
   {
-    slug: 'dumbo',
-    // le site a changé (nov. 2026) : une salle d'exposition reconstituée en 3D, plus la galerie de volumes en points
-    // (l'ancienne page reste en ligne : original.html)
-    genre: T('Scénographie numérique, Gaussian splatting, Blender', 'Digital scenography, Gaussian splatting, Blender'),   // à côté du titre : l'outil ou la technique, pas une description du projet
-    title: 'Musée océanographique Monaco',
-    year: '2026',
-    milieu: T('Grands fonds', 'Deep sea'),
-    cover: 'dumbo/vignette.webp',
-    coverMobile: 'dumbo/vignette-mobile.webp',
-    coverCredit: T('Capture du site : Johann Arata ; créatures : vidéos du Schmidt Ocean Institute', 'Site capture: Johann Arata; creatures: Schmidt Ocean Institute footage'),
-    spec: [
-      [T('Source', 'Source'), T('Plongées du ROV SuBastian (Schmidt Ocean Institute)', 'ROV SuBastian dives (Schmidt Ocean Institute)')],
-      [T('Traitement', 'Processing'), T('Créatures détourées par IA (SAM 2), salle et visiteurs en gaussiennes', 'Creatures cut out by AI (SAM 2), room and visitors as Gaussian splats')],
-      [T('Rendu', 'Output'), T('Salle d’exposition à parcourir, temps réel', 'Walkable exhibition room, real time')],
-    ],
-    intent: TODO('l’intention du projet en une phrase', 'the project’s intent in one sentence'),
-    context: T(
-      'Une salle d’exposition posée au fond des abysses : ses murs deviennent des hublots ouverts sur des créatures que personne ne peut voir de ses yeux. Proposition pour le Musée océanographique de Monaco.',
-      'An exhibition room set on the deep-sea floor: its walls become portholes onto creatures no one can see with their own eyes. A proposal for the Oceanographic Museum of Monaco.',
-    ),
-    capture: T('Pas de captation propre : plongées filmées en 4K par le ROV SuBastian du Schmidt Ocean Institute. Aucune de ces espèces ne vit en aquarium ; certaines n’ont été filmées qu’une fois.', 'No own capture: dives filmed in 4K by the Schmidt Ocean Institute’s ROV SuBastian. None of these species lives in an aquarium; some were filmed only once.'),
-    processing: T(
-      'Une IA de segmentation (SAM 2) détoure chaque créature dans les plongées entières, pour des passages longs et à leur taille réelle. La salle et ses visiteurs sont des nuages de gaussiennes (Gaussian splatting) ; les visiteurs la traversent comme sur une photo en pose longue.',
-      'A segmentation AI (SAM 2) cuts out each creature across whole dives, for long passages at true scale. The room and its visitors are Gaussian splats; the visitors cross it like a long-exposure photograph.',
-    ),
-    staging: T('On marche librement dans la salle, au clavier, à la souris ou au doigt. La seule lumière vient des écrans : les créatures surgissent du noir, s’approchent, puis y retournent. Ambiance sonore en continu.', 'Visitors walk freely through the room, by keyboard, mouse or touch. The only light comes from the screens: creatures rise out of the dark, come close, then sink back. Continuous soundscape.'),
-    learned: TODO('ce que tu as appris, les limites', 'what you learned, the limits'),
-    role: TODO('ton rôle', 'your role'),
-    tools: 'Three.js, Spark (Gaussian splatting), SAM 2, Blender, Web Audio',
-    credits: [
-      T('Images : archives du Schmidt Ocean Institute (ROV SuBastian)', 'Footage: Schmidt Ocean Institute archives (ROV SuBastian)'),
-      T('Musique : Teimo (Schluss), Thomas Köner', 'Music: Teimo (Schluss), Thomas Köner'),
-      TODO('mention exacte exigée par la licence du Schmidt Ocean Institute', 'exact licence wording'),
-    ],
-    link: { label: T('Ouvrir le projet', 'Open the project'), href: 'https://holosene.fr/portfolio/dumbo-biovolume/' },
-    media: [
-      // ordre de la visite : l'accueil, l'entrée dans la salle, la nef, les créatures derrière les écrans, les visiteurs
-      { src: 'dumbo/accueil.webp', alt: T('L’accueil du site : Dumbo, présences abyssales rares', 'The site’s home screen: Dumbo, rare abyssal presences') },
-      { src: 'dumbo/salle-marche.mp4', poster: 'dumbo/salle-marche-poster.webp', alt: T('Marche dans la salle, jusqu’à l’écran du fond', 'Walking through the room to the far screen') },
-      { src: 'dumbo/nef.webp', alt: T('La salle d’expo : écrans-hublots, visiteurs en gaussiennes', 'The exhibition room: porthole screens, visitors as Gaussian splats') },
-      { src: 'dumbo/nef-meduse.webp', alt: T('Une créature traverse l’écran du fond', 'A creature crossing the far screen'), layout: 'stack' },
-      { src: 'dumbo/nef-lumiere.webp', alt: T('Créatures sur les écrans et au sol', 'Creatures on the screens and on the floor'), layout: 'stack' },
-      { src: 'dumbo/calmar.webp', alt: T('Une créature rouge surgit du noir', 'A red creature rising out of the dark'), layout: 'stack' },
-      { src: 'dumbo/hublot.webp', alt: T('Une créature tout près de l’écran', 'A creature right against the screen'), layout: 'stack' },
-      { src: 'dumbo/retour.webp', alt: T('Demi-tour : le panneau d’entrée et les visiteurs, un poisson sur l’écran', 'Turning back: the entrance panel and the visitors, a fish on the screen') },
-      { src: 'dumbo/visiteurs.webp', alt: T('Les visiteurs, comme sur une photo en pose longue', 'The visitors, like a long-exposure photograph') },
-    ],
-  },
-  {
-    slug: 'photographique-volume',
-    genre: T('Design interactif, SHARP, Gaussian splatting', 'Interaction design, SHARP, Gaussian splatting'),   // à côté du titre : l'outil ou la technique, pas une description du projet
-    title: 'Volume Photographique',
-    year: '2025-26',
-    milieu: T('Littoral', 'Coastline'),
-    cover: 'photographique-volume/vignette.webp',
-    coverCredit: T('Rendu : Johann Arata, d’après les photographies de Nicolas Floc’h', 'Render: Johann Arata, from Nicolas Floc’h’s photographs'),
-    spec: [
-      [T('Source', 'Source'), T('Photographies de Nicolas Floc’h (série « Invisible »)', 'Photographs by Nicolas Floc’h (“Invisible” series)')],
-      [T('Volume', 'Volume'), T('Une photo, une scène 3D en gaussiennes (SHARP)', 'One photo, one 3D Gaussian scene (SHARP)')],
-      [T('Rendu', 'Output'), T('Plongée au défilement, son génératif (Web Audio)', 'Scroll-driven dive, generative sound (Web Audio)')],
-    ],
-    intent: TODO('l’intention du projet en une phrase', 'the project’s intent in one sentence'),
-    context: T(
-      'Les fonds marins photographiés par Nicolas Floc’h dans les Calanques deviennent des volumes où l’on s’enfonce. Sept photographies, de la côte vers le large.',
-      'The seabeds Nicolas Floc’h photographed in the Calanques become volumes to sink into. Seven photographs, from the coast out to the open sea.',
-    ),
-    capture: T('Pas de captation propre : photographies de Nicolas Floc’h, série « Invisible » (Parc national des Calanques, 2018-2020) et palette de « La couleur de l’eau » (2020).', 'No own capture: photographs by Nicolas Floc’h, “Invisible” series (Calanques National Park, 2018-2020), and the palette of “La couleur de l’eau” (2020).'),
-    processing: T(
-      'Chaque photographie est reconstruite en scène 3D de gaussiennes par SHARP, puis teintée de la couleur réelle de l’eau relevée par Floc’h, profondeur par profondeur.',
-      'Each photograph is rebuilt as a 3D Gaussian scene by SHARP, then tinted with the real colour of the water Floc’h recorded, depth by depth.',
-    ),
-    staging: T('Au défilement, l’image se creuse comme une membrane élastique, puis se défait en cellules ; on remonte à la surface pour passer à la photo suivante. Le son suit la plongée.', 'Scrolling hollows the image out like an elastic membrane, then breaks it into cells; rising back to the surface moves on to the next photo. The sound follows the dive.'),
-    learned: TODO('ce que tu as appris, les limites', 'what you learned, the limits'),
-    role: TODO('ton rôle', 'your role'),
-    tools: 'Three.js, SHARP, Spark (Gaussian splatting), Web Audio',
-    credits: [T('Photographies © Nicolas Floc’h', 'Photographs © Nicolas Floc’h'), T('Reconstruction 3D : SHARP, sous licence Apple Machine Learning Research Model', '3D reconstruction: SHARP, under the Apple Machine Learning Research Model License')],
-    link: { label: T('Ouvrir le projet', 'Open the project'), href: 'https://holosene.fr/portfolio/photographique-volume/' },
-    media: [
-      // la plongée en vidéo, puis des détails de près (gaussiennes, cellules), puis la dernière photo, au large
-      { src: 'photographique-volume/plongee.mp4', poster: 'photographique-volume/plongee-poster.webp', alt: T('Plongée dans une photographie : l’image se creuse puis se défait en cellules', 'Diving into a photograph: the image hollows out, then breaks into cells') },
-      { src: 'photographique-volume/posidonie.webp', alt: T('De près : racines de posidonie en gaussiennes', 'Close up: seagrass roots as Gaussian splats') },
-      { src: 'photographique-volume/posidonie-cellules.webp', alt: T('Plus profond : les racines se défont en cellules', 'Deeper: the roots break into cells'), layout: 'stack' },
-      { src: 'photographique-volume/roche.webp', alt: T('Fond rocheux, couleur de l’eau près de la côte', 'Rocky seabed, the colour of the water near the coast'), layout: 'stack' },
-      { src: 'photographique-volume/large.webp', alt: T('La dernière photographie, au large, en pleine plongée', 'The last photograph, out at sea, mid-dive') },
-    ],
-  },
-  {
-    slug: 'duo-news',
-    genre: T('UI/UX design, Figma', 'UI/UX design, Figma'),   // à côté du titre : l'outil ou la technique, pas une description du projet
-    title: 'Duo News',
-    year: '2026',
-    milieu: T('Presse numérique', 'Digital press'),
-    cover: 'duo-news/vignette.webp',
-    coverMobile: 'duo-news/vignette-mobile.webp',   // vignette carrée (mobile) : l'image de couverture seule
-    coverDark: 'duo-news/vignette-sombre.webp', coverMobileDark: 'duo-news/vignette-mobile-sombre.webp',   // mode sombre : même image, fond sombre
-    spec: [
-      [T('Support', 'Device'), T('iPhone Duo, écran pliable : ouvert en double page, fermé en une page', 'iPhone Duo, foldable screen: open as a double page, closed as a single page')],
-      [T('Contenu', 'Content'), T('Sources RSS d’actualité locales, réglables', 'Local RSS news sources, user-selectable')],
-      [T('Rendu', 'Output'), T('Prototype de démonstration Figma', 'Figma demo prototype')],
-    ],
-    intent: T('Un journal qui rassemble les sources RSS d’actualité, voulu pour l’iPhone Duo.', 'A newspaper that gathers RSS news sources, designed for the iPhone Duo.'),
-    context: T(
-      'Projet de Master Design, Environnements numériques (Université de Strasbourg, octobre 2026). Une édition quotidienne qui reprend les codes de la presse papier.',
-      'Master’s project in Design, Digital Environments (University of Strasbourg, October 2026). A daily edition that borrows the codes of print newspapers.',
-    ),
-    capture: T('L’écran intérieur de l’iPhone Duo : OLED pliable 7,6 pouces, 1878 × 2670 px. Fermé, il prend un format passeport.', 'The iPhone Duo inner screen: 7.6-inch foldable OLED, 1878 × 2670 px. Closed, it is passport-sized.'),
-    processing: T('Trois familles de caractères, onze styles de texte appliqués à tous les composants ; Hubot Sans ExtraBold pour les gros titres, dans l’esprit des unes de presse.', 'Three typefaces, eleven text styles applied to every component; Hubot Sans ExtraBold for headlines, in the spirit of newspaper front pages.'),
-    staging: T('Un prototype en deux parcours, journal ouvert et journal fermé : accueil, réglages des sources, pages d’articles, fin de l’édition.', 'A prototype with two flows, open and closed: home, source settings, article pages, end of the edition.'),
-    learned: TODO('ce que tu as appris, les limites', 'what you learned, the limits'),
-    role: TODO('ton rôle', 'your role'),
-    tools: 'Figma',
-    credits: [],
-    media: [
-      // contexte (en main, le parcours ouvert), puis le système (grille, images, typo, couleurs), puis le parcours fermé ;
-      // dark / posterDark : la même image sur fond sombre, montrée en mode sombre (main.js)
-      { src: 'duo-news/main-prototype.webp', dark: 'duo-news/main-prototype-sombre.webp', alt: T('Le journal Duo News tenu en main, iPhone Duo fermé', 'Duo News held in hand, iPhone Duo closed') },
-      { src: 'duo-news/duo-news-ouvert.mp4', poster: 'duo-news/duo-news-ouvert-poster.webp', dark: 'duo-news/duo-news-ouvert-sombre.mp4', posterDark: 'duo-news/duo-news-ouvert-sombre-poster.webp', alt: T('Parcours du journal ouvert, de l’accueil à la fin de l’édition', 'Open newspaper flow, from home to the end of the edition') },
-      { src: 'duo-news/ouvert-une.webp', dark: 'duo-news/ouvert-une-sombre.webp', alt: T('Le journal ouvert en double page', 'The newspaper open as a double page'), layout: 'stack' },
-      { src: 'duo-news/ferme-trio.webp', dark: 'duo-news/ferme-trio-sombre.webp', alt: T('Trois pages du journal fermé', 'Three pages of the closed newspaper'), layout: 'stack' },
-      { src: 'duo-news/la-grille.webp', dark: 'duo-news/la-grille-sombre.webp', alt: T('La grille : 6 colonnes, ligne de base de 16 px', 'The grid: 6 columns, 16 px baseline') },
-      { src: 'duo-news/traitement-des-images.webp', dark: 'duo-news/traitement-des-images-sombre.webp', alt: T('Le traitement des images en trichromie', 'Image processing in trichromy') },
-      { src: 'duo-news/les-styles-de-texte.webp', dark: 'duo-news/les-styles-de-texte-sombre.webp', alt: T('Les styles de texte : trois familles, onze styles', 'Text styles: three typefaces, eleven styles'), layout: 'stack' },
-      { src: 'duo-news/les-couleurs.webp', dark: 'duo-news/les-couleurs-sombre.webp', alt: T('Les couleurs : trois thèmes, clair, confort et sombre', 'Colours: three themes, light, comfort and dark'), layout: 'stack' },
-      { src: 'duo-news/duo-news-ferme.mp4', poster: 'duo-news/duo-news-ferme-poster.webp', dark: 'duo-news/duo-news-ferme-sombre.mp4', posterDark: 'duo-news/duo-news-ferme-sombre-poster.webp', alt: T('Parcours du journal fermé, page par page', 'Closed newspaper flow, page by page') },
-    ],
-  },
-  {
     slug: 'voyageur-1',
     genre: T('Design interactif, WebGL 2', 'Interaction design, WebGL 2'),   // à côté du titre : l'outil ou la technique, pas une description du projet
     title: 'NASA Voyageur 1',
@@ -284,45 +157,6 @@ export const projects = [
       { src: 'voyageur-1/voyageur-disque.mp4', poster: 'voyageur-1/voyageur-disque-poster.webp', alt: T('Le disque tourne au glisser', 'Dragging spins the record') },
       { src: 'voyageur-1/voyageur-volume.mp4', poster: 'voyageur-1/voyageur-volume-poster.webp', alt: T('Une image se reforme en volume, puis tourne', 'An image re-forms in volume, then turns') },
       { src: 'voyageur-1/galerie.webp', alt: T('La galerie des 116 images', 'The gallery of 116 images') },
-    ],
-  },
-  {
-    slug: 'mondes-immerges',
-    research: true,   // présenté seulement dans Recherche
-    genre: T('Édition, InDesign', 'Editorial design, InDesign'),   // à côté du titre : l'outil ou la technique, pas une description du projet
-    title: 'Mondes Immergés',
-    year: '2024-25',
-    milieu: T('Recherche', 'Research'),
-    cover: 'mondes-immerges/011.webp',
-    spec: [
-      [T('Forme', 'Format'), T('Article de licence édité', 'Published bachelor’s paper')],
-      [T('Sujet', 'Subject'), T('Design immersif et milieux aquatiques', 'Immersive design and aquatic environments')],
-      [T('Cadre', 'Context'), T('DNMADe Design numérique', 'DNMADe in Digital Design')],
-    ],
-    intent: T(
-      'Comment le design immersif peut-il rendre sensibles des milieux aquatiques qui se dégradent ?',
-      'How can immersive design make damaged aquatic environments felt?',
-    ),
-    context: T(
-      'Article de licence, DNMADe (René Goscinny). Il croise écologie et représentation visuelle et pose les bases des projets qui ont suivi.',
-      'Bachelor’s paper written during my design degree (René Goscinny). It brings ecology and visual representation together and laid the groundwork for the projects that followed.',
-    ),
-    capture: T('Sources documentaires et scientifiques.', 'Documentary and scientific sources.'),
-    processing: T('Analyse de dispositifs existants et expérimentations graphiques.', 'Review of existing works and graphic experiments.'),
-    staging: T('Un article édité, mis en page et imprimé.', 'An edited, designed and printed paper.'),
-    learned: TODO('ce que tu en retiens', 'what you take from it'),
-    role: TODO('ton rôle', 'your role'),
-    tools: 'InDesign, Photoshop, Illustrator',
-    credits: [],
-    link: { label: T('Lire l’article', 'Read the paper'), href: 'https://indd.adobe.com/view/dc3c7dff-f28e-4969-9c00-527dc66c4321' },
-    media: [
-      // contexte (le livre en main), puis les expérimentations, puis le livre à feuilleter
-      { src: 'mondes-immerges/012.webp', alt: T('Expérimentation en volume', 'Volume experiment') },
-      { src: 'mondes-immerges/013.webp', pos: [0.5, 0.25], alt: T('Page d’ouverture', 'Opening spread') },
-      { src: 'mondes-immerges/009.webp', alt: T('Aurores boréales transformées en particules', 'Northern lights turned into particles'), layout: 'stack' },
-      { src: 'mondes-immerges/005.webp', alt: T('Motif génératif', 'Generative pattern'), layout: 'stack' },
-      { src: 'mondes-immerges/010.webp', alt: T('Expérimentation graphique', 'Graphic experiment') },
-      { book: 'mondes-immerges/livre', pages: 130, ratio: 1004 / 1400, poster: 'mondes-immerges/011.webp', alt: T('Le livre Mondes Immergés à feuilleter', 'The Mondes Immergés book, to leaf through') },
     ],
   },
   {
@@ -381,6 +215,172 @@ export const projects = [
       { src: 'mondes-immerges-site/mobile-documentaire.webp', alt: T('Sur téléphone : la page d’un documentaire', 'On a phone: a documentary’s page') },
     ],
   },
+  {
+    slug: 'duo-news',
+    genre: T('UI/UX design, Figma', 'UI/UX design, Figma'),   // à côté du titre : l'outil ou la technique, pas une description du projet
+    title: 'Duo News',
+    year: '2026',
+    milieu: T('Presse numérique', 'Digital press'),
+    cover: 'duo-news/vignette.webp',
+    coverMobile: 'duo-news/vignette-mobile.webp',   // vignette carrée (mobile) : l'image de couverture seule
+    coverDark: 'duo-news/vignette-sombre.webp', coverMobileDark: 'duo-news/vignette-mobile-sombre.webp',   // mode sombre : même image, fond sombre
+    spec: [
+      [T('Support', 'Device'), T('iPhone Duo, écran pliable : ouvert en double page, fermé en une page', 'iPhone Duo, foldable screen: open as a double page, closed as a single page')],
+      [T('Contenu', 'Content'), T('Sources RSS d’actualité locales, réglables', 'Local RSS news sources, user-selectable')],
+      [T('Rendu', 'Output'), T('Prototype de démonstration Figma', 'Figma demo prototype')],
+    ],
+    intent: T('Un journal qui rassemble les sources RSS d’actualité, voulu pour l’iPhone Duo.', 'A newspaper that gathers RSS news sources, designed for the iPhone Duo.'),
+    context: T(
+      'Projet de Master Design, Environnements numériques (Université de Strasbourg, octobre 2026). Une édition quotidienne qui reprend les codes de la presse papier.',
+      'Master’s project in Design, Digital Environments (University of Strasbourg, October 2026). A daily edition that borrows the codes of print newspapers.',
+    ),
+    capture: T('L’écran intérieur de l’iPhone Duo : OLED pliable 7,6 pouces, 1878 × 2670 px. Fermé, il prend un format passeport.', 'The iPhone Duo inner screen: 7.6-inch foldable OLED, 1878 × 2670 px. Closed, it is passport-sized.'),
+    processing: T('Trois familles de caractères, onze styles de texte appliqués à tous les composants ; Hubot Sans ExtraBold pour les gros titres, dans l’esprit des unes de presse.', 'Three typefaces, eleven text styles applied to every component; Hubot Sans ExtraBold for headlines, in the spirit of newspaper front pages.'),
+    staging: T('Un prototype en deux parcours, journal ouvert et journal fermé : accueil, réglages des sources, pages d’articles, fin de l’édition.', 'A prototype with two flows, open and closed: home, source settings, article pages, end of the edition.'),
+    learned: TODO('ce que tu as appris, les limites', 'what you learned, the limits'),
+    role: TODO('ton rôle', 'your role'),
+    tools: 'Figma',
+    credits: [],
+    media: [
+      // contexte (en main, le parcours ouvert), puis le système (grille, images, typo, couleurs), puis le parcours fermé ;
+      // dark / posterDark : la même image sur fond sombre, montrée en mode sombre (main.js)
+      { src: 'duo-news/main-prototype.webp', dark: 'duo-news/main-prototype-sombre.webp', alt: T('Le journal Duo News tenu en main, iPhone Duo fermé', 'Duo News held in hand, iPhone Duo closed') },
+      { src: 'duo-news/duo-news-ouvert.mp4', poster: 'duo-news/duo-news-ouvert-poster.webp', dark: 'duo-news/duo-news-ouvert-sombre.mp4', posterDark: 'duo-news/duo-news-ouvert-sombre-poster.webp', alt: T('Parcours du journal ouvert, de l’accueil à la fin de l’édition', 'Open newspaper flow, from home to the end of the edition') },
+      { src: 'duo-news/ouvert-une.webp', dark: 'duo-news/ouvert-une-sombre.webp', alt: T('Le journal ouvert en double page', 'The newspaper open as a double page'), layout: 'stack' },
+      { src: 'duo-news/ferme-trio.webp', dark: 'duo-news/ferme-trio-sombre.webp', alt: T('Trois pages du journal fermé', 'Three pages of the closed newspaper'), layout: 'stack' },
+      { src: 'duo-news/la-grille.webp', dark: 'duo-news/la-grille-sombre.webp', alt: T('La grille : 6 colonnes, ligne de base de 16 px', 'The grid: 6 columns, 16 px baseline') },
+      { src: 'duo-news/traitement-des-images.webp', dark: 'duo-news/traitement-des-images-sombre.webp', alt: T('Le traitement des images en trichromie', 'Image processing in trichromy') },
+      { src: 'duo-news/les-styles-de-texte.webp', dark: 'duo-news/les-styles-de-texte-sombre.webp', alt: T('Les styles de texte : trois familles, onze styles', 'Text styles: three typefaces, eleven styles'), layout: 'stack' },
+      { src: 'duo-news/les-couleurs.webp', dark: 'duo-news/les-couleurs-sombre.webp', alt: T('Les couleurs : trois thèmes, clair, confort et sombre', 'Colours: three themes, light, comfort and dark'), layout: 'stack' },
+      { src: 'duo-news/duo-news-ferme.mp4', poster: 'duo-news/duo-news-ferme-poster.webp', dark: 'duo-news/duo-news-ferme-sombre.mp4', posterDark: 'duo-news/duo-news-ferme-sombre-poster.webp', alt: T('Parcours du journal fermé, page par page', 'Closed newspaper flow, page by page') },
+    ],
+  },
+  {
+    slug: 'photographique-volume',
+    genre: T('Design interactif, SHARP, Gaussian splatting', 'Interaction design, SHARP, Gaussian splatting'),   // à côté du titre : l'outil ou la technique, pas une description du projet
+    title: 'Volume Photographique',
+    year: '2025-26',
+    milieu: T('Littoral', 'Coastline'),
+    cover: 'photographique-volume/vignette.webp',
+    coverCredit: T('Rendu : Johann Arata, d’après les photographies de Nicolas Floc’h', 'Render: Johann Arata, from Nicolas Floc’h’s photographs'),
+    spec: [
+      [T('Source', 'Source'), T('Photographies de Nicolas Floc’h (série « Invisible »)', 'Photographs by Nicolas Floc’h (“Invisible” series)')],
+      [T('Volume', 'Volume'), T('Une photo, une scène 3D en gaussiennes (SHARP)', 'One photo, one 3D Gaussian scene (SHARP)')],
+      [T('Rendu', 'Output'), T('Plongée au défilement, son génératif (Web Audio)', 'Scroll-driven dive, generative sound (Web Audio)')],
+    ],
+    intent: TODO('l’intention du projet en une phrase', 'the project’s intent in one sentence'),
+    context: T(
+      'Les fonds marins photographiés par Nicolas Floc’h dans les Calanques deviennent des volumes où l’on s’enfonce. Sept photographies, de la côte vers le large.',
+      'The seabeds Nicolas Floc’h photographed in the Calanques become volumes to sink into. Seven photographs, from the coast out to the open sea.',
+    ),
+    capture: T('Pas de captation propre : photographies de Nicolas Floc’h, série « Invisible » (Parc national des Calanques, 2018-2020) et palette de « La couleur de l’eau » (2020).', 'No own capture: photographs by Nicolas Floc’h, “Invisible” series (Calanques National Park, 2018-2020), and the palette of “La couleur de l’eau” (2020).'),
+    processing: T(
+      'Chaque photographie est reconstruite en scène 3D de gaussiennes par SHARP, puis teintée de la couleur réelle de l’eau relevée par Floc’h, profondeur par profondeur.',
+      'Each photograph is rebuilt as a 3D Gaussian scene by SHARP, then tinted with the real colour of the water Floc’h recorded, depth by depth.',
+    ),
+    staging: T('Au défilement, l’image se creuse comme une membrane élastique, puis se défait en cellules ; on remonte à la surface pour passer à la photo suivante. Le son suit la plongée.', 'Scrolling hollows the image out like an elastic membrane, then breaks it into cells; rising back to the surface moves on to the next photo. The sound follows the dive.'),
+    learned: TODO('ce que tu as appris, les limites', 'what you learned, the limits'),
+    role: TODO('ton rôle', 'your role'),
+    tools: 'Three.js, SHARP, Spark (Gaussian splatting), Web Audio',
+    credits: [T('Photographies © Nicolas Floc’h', 'Photographs © Nicolas Floc’h'), T('Reconstruction 3D : SHARP, sous licence Apple Machine Learning Research Model', '3D reconstruction: SHARP, under the Apple Machine Learning Research Model License')],
+    link: { label: T('Ouvrir le projet', 'Open the project'), href: 'https://holosene.fr/portfolio/photographique-volume/' },
+    media: [
+      // la plongée en vidéo, puis des détails de près (gaussiennes, cellules), puis la dernière photo, au large
+      { src: 'photographique-volume/plongee.mp4', poster: 'photographique-volume/plongee-poster.webp', alt: T('Plongée dans une photographie : l’image se creuse puis se défait en cellules', 'Diving into a photograph: the image hollows out, then breaks into cells') },
+      { src: 'photographique-volume/posidonie.webp', alt: T('De près : racines de posidonie en gaussiennes', 'Close up: seagrass roots as Gaussian splats') },
+      { src: 'photographique-volume/posidonie-cellules.webp', alt: T('Plus profond : les racines se défont en cellules', 'Deeper: the roots break into cells'), layout: 'stack' },
+      { src: 'photographique-volume/roche.webp', alt: T('Fond rocheux, couleur de l’eau près de la côte', 'Rocky seabed, the colour of the water near the coast'), layout: 'stack' },
+      { src: 'photographique-volume/large.webp', alt: T('La dernière photographie, au large, en pleine plongée', 'The last photograph, out at sea, mid-dive') },
+    ],
+  },
+  {
+    slug: 'dumbo',
+    // le site a changé (nov. 2026) : une salle d'exposition reconstituée en 3D, plus la galerie de volumes en points
+    // (l'ancienne page reste en ligne : original.html)
+    genre: T('Scénographie numérique, Gaussian splatting, Blender', 'Digital scenography, Gaussian splatting, Blender'),   // à côté du titre : l'outil ou la technique, pas une description du projet
+    title: 'Musée océanographique Monaco',
+    year: '2026',
+    milieu: T('Grands fonds', 'Deep sea'),
+    cover: 'dumbo/vignette.webp',
+    coverMobile: 'dumbo/vignette-mobile.webp',
+    coverCredit: T('Capture du site : Johann Arata ; créatures : vidéos du Schmidt Ocean Institute', 'Site capture: Johann Arata; creatures: Schmidt Ocean Institute footage'),
+    spec: [
+      [T('Source', 'Source'), T('Plongées du ROV SuBastian (Schmidt Ocean Institute)', 'ROV SuBastian dives (Schmidt Ocean Institute)')],
+      [T('Traitement', 'Processing'), T('Créatures détourées par IA (SAM 2), salle et visiteurs en gaussiennes', 'Creatures cut out by AI (SAM 2), room and visitors as Gaussian splats')],
+      [T('Rendu', 'Output'), T('Salle d’exposition à parcourir, temps réel', 'Walkable exhibition room, real time')],
+    ],
+    intent: TODO('l’intention du projet en une phrase', 'the project’s intent in one sentence'),
+    context: T(
+      'Une salle d’exposition posée au fond des abysses : ses murs deviennent des hublots ouverts sur des créatures que personne ne peut voir de ses yeux. Proposition pour le Musée océanographique de Monaco.',
+      'An exhibition room set on the deep-sea floor: its walls become portholes onto creatures no one can see with their own eyes. A proposal for the Oceanographic Museum of Monaco.',
+    ),
+    capture: T('Pas de captation propre : plongées filmées en 4K par le ROV SuBastian du Schmidt Ocean Institute. Aucune de ces espèces ne vit en aquarium ; certaines n’ont été filmées qu’une fois.', 'No own capture: dives filmed in 4K by the Schmidt Ocean Institute’s ROV SuBastian. None of these species lives in an aquarium; some were filmed only once.'),
+    processing: T(
+      'Une IA de segmentation (SAM 2) détoure chaque créature dans les plongées entières, pour des passages longs et à leur taille réelle. La salle et ses visiteurs sont des nuages de gaussiennes (Gaussian splatting) ; les visiteurs la traversent comme sur une photo en pose longue.',
+      'A segmentation AI (SAM 2) cuts out each creature across whole dives, for long passages at true scale. The room and its visitors are Gaussian splats; the visitors cross it like a long-exposure photograph.',
+    ),
+    staging: T('On marche librement dans la salle, au clavier, à la souris ou au doigt. La seule lumière vient des écrans : les créatures surgissent du noir, s’approchent, puis y retournent. Ambiance sonore en continu.', 'Visitors walk freely through the room, by keyboard, mouse or touch. The only light comes from the screens: creatures rise out of the dark, come close, then sink back. Continuous soundscape.'),
+    learned: TODO('ce que tu as appris, les limites', 'what you learned, the limits'),
+    role: TODO('ton rôle', 'your role'),
+    tools: 'Three.js, Spark (Gaussian splatting), SAM 2, Blender, Web Audio',
+    credits: [
+      T('Images : archives du Schmidt Ocean Institute (ROV SuBastian)', 'Footage: Schmidt Ocean Institute archives (ROV SuBastian)'),
+      T('Musique : Teimo (Schluss), Thomas Köner', 'Music: Teimo (Schluss), Thomas Köner'),
+      TODO('mention exacte exigée par la licence du Schmidt Ocean Institute', 'exact licence wording'),
+    ],
+    link: { label: T('Ouvrir le projet', 'Open the project'), href: 'https://holosene.fr/portfolio/dumbo-biovolume/' },
+    media: [
+      // ordre de la visite : l'accueil, l'entrée dans la salle, la nef, les créatures derrière les écrans, les visiteurs
+      { src: 'dumbo/accueil.webp', alt: T('L’accueil du site : Dumbo, présences abyssales rares', 'The site’s home screen: Dumbo, rare abyssal presences') },
+      { src: 'dumbo/salle-marche.mp4', poster: 'dumbo/salle-marche-poster.webp', alt: T('Marche dans la salle, jusqu’à l’écran du fond', 'Walking through the room to the far screen') },
+      { src: 'dumbo/nef.webp', alt: T('La salle d’expo : écrans-hublots, visiteurs en gaussiennes', 'The exhibition room: porthole screens, visitors as Gaussian splats') },
+      { src: 'dumbo/nef-meduse.webp', alt: T('Une créature traverse l’écran du fond', 'A creature crossing the far screen'), layout: 'stack' },
+      { src: 'dumbo/nef-lumiere.webp', alt: T('Créatures sur les écrans et au sol', 'Creatures on the screens and on the floor'), layout: 'stack' },
+      { src: 'dumbo/calmar.webp', alt: T('Une créature rouge surgit du noir', 'A red creature rising out of the dark'), layout: 'stack' },
+      { src: 'dumbo/hublot.webp', alt: T('Une créature tout près de l’écran', 'A creature right against the screen'), layout: 'stack' },
+      { src: 'dumbo/retour.webp', alt: T('Demi-tour : le panneau d’entrée et les visiteurs, un poisson sur l’écran', 'Turning back: the entrance panel and the visitors, a fish on the screen') },
+      { src: 'dumbo/visiteurs.webp', alt: T('Les visiteurs, comme sur une photo en pose longue', 'The visitors, like a long-exposure photograph') },
+    ],
+  },
+  {
+    slug: 'mondes-immerges',
+    research: true,   // présenté seulement dans Recherche
+    genre: T('Édition, InDesign', 'Editorial design, InDesign'),   // à côté du titre : l'outil ou la technique, pas une description du projet
+    title: 'Mondes Immergés',
+    year: '2024-25',
+    milieu: T('Recherche', 'Research'),
+    cover: 'mondes-immerges/011.webp',
+    spec: [
+      [T('Forme', 'Format'), T('Article de licence édité', 'Published bachelor’s paper')],
+      [T('Sujet', 'Subject'), T('Design immersif et milieux aquatiques', 'Immersive design and aquatic environments')],
+      [T('Cadre', 'Context'), T('DNMADe Design numérique', 'DNMADe in Digital Design')],
+    ],
+    intent: T(
+      'Comment le design immersif peut-il rendre sensibles des milieux aquatiques qui se dégradent ?',
+      'How can immersive design make damaged aquatic environments felt?',
+    ),
+    context: T(
+      'Article de licence, DNMADe (René Goscinny). Il croise écologie et représentation visuelle et pose les bases des projets qui ont suivi.',
+      'Bachelor’s paper written during my design degree (René Goscinny). It brings ecology and visual representation together and laid the groundwork for the projects that followed.',
+    ),
+    capture: T('Sources documentaires et scientifiques.', 'Documentary and scientific sources.'),
+    processing: T('Analyse de dispositifs existants et expérimentations graphiques.', 'Review of existing works and graphic experiments.'),
+    staging: T('Un article édité, mis en page et imprimé.', 'An edited, designed and printed paper.'),
+    learned: TODO('ce que tu en retiens', 'what you take from it'),
+    role: TODO('ton rôle', 'your role'),
+    tools: 'InDesign, Photoshop, Illustrator',
+    credits: [],
+    link: { label: T('Lire l’article', 'Read the paper'), href: 'https://indd.adobe.com/view/dc3c7dff-f28e-4969-9c00-527dc66c4321' },
+    media: [
+      // contexte (le livre en main), puis les expérimentations, puis le livre à feuilleter
+      { src: 'mondes-immerges/012.webp', alt: T('Expérimentation en volume', 'Volume experiment') },
+      { src: 'mondes-immerges/013.webp', pos: [0.5, 0.25], alt: T('Page d’ouverture', 'Opening spread') },
+      { src: 'mondes-immerges/009.webp', alt: T('Aurores boréales transformées en particules', 'Northern lights turned into particles'), layout: 'stack' },
+      { src: 'mondes-immerges/005.webp', alt: T('Motif génératif', 'Generative pattern'), layout: 'stack' },
+      { src: 'mondes-immerges/010.webp', alt: T('Expérimentation graphique', 'Graphic experiment') },
+      { book: 'mondes-immerges/livre', pages: 130, ratio: 1004 / 1400, poster: 'mondes-immerges/011.webp', alt: T('Le livre Mondes Immergés à feuilleter', 'The Mondes Immergés book, to leaf through') },
+    ],
+  },
 ]
 
 /** Recherche : le profil de chercheur, au-delà des projets. Uniquement des éléments fournis par Johann. */
@@ -436,10 +436,12 @@ export const studio = T(
 
 /** À propos, en fin de page. **…** : mots mis en avant. Uniquement des informations fournies par Johann. */
 export const about = [
-  T('Je suis designer d’interaction, en **master Design (Environnements numériques)** à la Faculté des arts de Strasbourg, après un **DNMADe Design numérique**.',
-    'I am an interaction designer, studying for a **master’s in Design (Digital Environments)** at the Faculty of Arts in Strasbourg, after a **degree in Digital Design (DNMADe)**.'),
-  T('Je conçois des **expériences interactives** (sites immersifs, interfaces, scénographies numériques), du concept au prototype codé en **WebGL et Three.js**.',
-    'I design **interactive experiences** (immersive websites, interfaces, digital scenography), from concept to a prototype coded in **WebGL and Three.js**.'),
-  T('En parallèle des projets, je mène une **recherche en design** sur le réel capturé et sur ce qui le sépare de la **génération par IA**.',
-    'Alongside the projects, I carry out **design research** on captured reality and on what separates it from **AI generation**.'),
+  T('Je suis designer d’interaction et creative technologist junior, en **master Design (Environnements numériques)** à la Faculté des arts de Strasbourg, après un **DNMADe Design numérique**.',
+    'I am an interaction designer and junior creative technologist, studying for a **master’s in Design (Digital Environments)** at the Faculty of Arts in Strasbourg, after a **degree in Digital Design (DNMADe)**.'),
+  T('Je conçois des **expériences interactives** (sites immersifs, interfaces, scénographies numériques), du concept au prototype codé en **WebGL, WebGPU et Three.js**.',
+    'I design **interactive experiences** (immersive websites, interfaces, digital scenography), from concept to a prototype coded in **WebGL, WebGPU and Three.js**.'),
+  T('Plusieurs projets sont des **propositions non commandées**, pensées pour des institutions comme la NASA, National Geographic ou le Musée océanographique de Monaco.',
+    'Several projects are **unsolicited proposals**, designed for institutions such as NASA, National Geographic or the Musée océanographique de Monaco.'),
+  T('En parallèle, je mène une **recherche en design** sur le réel capturé et sur ce qui le sépare de la **génération par IA**.',
+    'Alongside, I carry out **design research** on captured reality and on what separates it from **AI generation**.'),
 ]
