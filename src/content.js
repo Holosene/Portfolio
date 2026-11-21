@@ -61,6 +61,7 @@ export const ui = {
     learned: T('Ce que j’ai appris, limites', 'What I learned, limits'),
     credits: T('Fiche technique', 'Fact sheet'),   // titre de la rubrique (ses lignes : rôle, outils, année, crédits)
   },
+  proposal: T('Proposition non commandée', 'Unsolicited proposal'),   // petite inscription au-dessus du titre, sur la page de chaque projet (hors recherche)
   role: T('Rôle', 'Role'),
   tools: T('Outils', 'Tools'),
   year: T('Année', 'Year'),
@@ -161,7 +162,7 @@ export const projects = [
   },
   {
     slug: 'photographique-volume',
-    genre: T('Design interactif, SHARP (Apple), Gaussian splatting', 'Interaction design, SHARP (Apple), Gaussian splatting'),   // à côté du titre : l'outil ou la technique, pas une description du projet
+    genre: T('Design interactif, SHARP, Gaussian splatting', 'Interaction design, SHARP, Gaussian splatting'),   // à côté du titre : l'outil ou la technique, pas une description du projet
     title: 'Volume Photographique',
     year: '2025-26',
     milieu: T('Littoral', 'Coastline'),
@@ -169,7 +170,7 @@ export const projects = [
     coverCredit: T('Rendu : Johann Arata, d’après les photographies de Nicolas Floc’h', 'Render: Johann Arata, from Nicolas Floc’h’s photographs'),
     spec: [
       [T('Source', 'Source'), T('Photographies de Nicolas Floc’h (série « Invisible »)', 'Photographs by Nicolas Floc’h (“Invisible” series)')],
-      [T('Volume', 'Volume'), T('Une photo, une scène 3D en gaussiennes (SHARP, Apple)', 'One photo, one 3D Gaussian scene (SHARP, Apple)')],
+      [T('Volume', 'Volume'), T('Une photo, une scène 3D en gaussiennes (SHARP)', 'One photo, one 3D Gaussian scene (SHARP)')],
       [T('Rendu', 'Output'), T('Plongée au défilement, son génératif (Web Audio)', 'Scroll-driven dive, generative sound (Web Audio)')],
     ],
     intent: TODO('l’intention du projet en une phrase', 'the project’s intent in one sentence'),
@@ -179,14 +180,14 @@ export const projects = [
     ),
     capture: T('Pas de captation propre : photographies de Nicolas Floc’h, série « Invisible » (Parc national des Calanques, 2018-2020) et palette de « La couleur de l’eau » (2020).', 'No own capture: photographs by Nicolas Floc’h, “Invisible” series (Calanques National Park, 2018-2020), and the palette of “La couleur de l’eau” (2020).'),
     processing: T(
-      'Chaque photographie est reconstruite en scène 3D de gaussiennes par SHARP (Apple), puis teintée de la couleur réelle de l’eau relevée par Floc’h, profondeur par profondeur.',
-      'Each photograph is rebuilt as a 3D Gaussian scene by SHARP (Apple), then tinted with the real colour of the water Floc’h recorded, depth by depth.',
+      'Chaque photographie est reconstruite en scène 3D de gaussiennes par SHARP, puis teintée de la couleur réelle de l’eau relevée par Floc’h, profondeur par profondeur.',
+      'Each photograph is rebuilt as a 3D Gaussian scene by SHARP, then tinted with the real colour of the water Floc’h recorded, depth by depth.',
     ),
     staging: T('Au défilement, l’image se creuse comme une membrane élastique, puis se défait en cellules ; on remonte à la surface pour passer à la photo suivante. Le son suit la plongée.', 'Scrolling hollows the image out like an elastic membrane, then breaks it into cells; rising back to the surface moves on to the next photo. The sound follows the dive.'),
     learned: TODO('ce que tu as appris, les limites', 'what you learned, the limits'),
     role: TODO('ton rôle', 'your role'),
-    tools: 'Three.js, SHARP (Apple), Spark (Gaussian splatting), Web Audio',
-    credits: [T('Photographies © Nicolas Floc’h', 'Photographs © Nicolas Floc’h'), T('Reconstruction 3D : SHARP (Apple), sous licence Apple Machine Learning Research Model', '3D reconstruction: SHARP (Apple), under the Apple Machine Learning Research Model License')],
+    tools: 'Three.js, SHARP, Spark (Gaussian splatting), Web Audio',
+    credits: [T('Photographies © Nicolas Floc’h', 'Photographs © Nicolas Floc’h'), T('Reconstruction 3D : SHARP, sous licence Apple Machine Learning Research Model', '3D reconstruction: SHARP, under the Apple Machine Learning Research Model License')],
     link: { label: T('Ouvrir le projet', 'Open the project'), href: 'https://holosene.github.io/photographique-volume' },
     media: [
       // la plongée en vidéo, puis des détails de près (gaussiennes, cellules), puis la dernière photo, au large
@@ -385,14 +386,14 @@ export const projects = [
 /** Recherche : le profil de chercheur, au-delà des projets. Uniquement des éléments fournis par Johann. */
 /** Projets choisis : courte présentation de la section. */
 export const workIntro = T(
-  'Des propositions non commandées, imaginées pour des institutions et des marques : une salle de musée, des sites immersifs, une datavisualisation, une interface de presse. Chacune va du concept au prototype qui fonctionne.',
-  'Unsolicited proposals, imagined for institutions and brands: a museum room, immersive websites, a data visualisation, a news interface. Each one goes from concept to working prototype.',
+  'Scénographie numérique en 3D temps réel, sites immersifs en WebGL et WebGPU, datavisualisation, Gaussian splatting et design d’interface : chaque projet va du concept au prototype codé.',
+  'Real-time 3D digital scenography, immersive websites in WebGL and WebGPU, data visualisation, Gaussian splatting and interface design: each project goes from concept to coded prototype.',
 )
 
 export const research = {
   intro: T(
-    'Mon mémoire porte sur la reconstruction volumétrique du réel capturé (Gaussian splatting 3D et 4D) et sur la frontière entre captation, reconstruction et génération par IA.',
-    'My thesis looks at the volumetric reconstruction of captured reality (3D and 4D Gaussian splatting) and at the line between capture, reconstruction and AI generation.',
+    'Mon mémoire porte sur la reconstruction volumétrique du réel capturé (Gaussian splatting 3D et autres techniques) et sur la frontière entre captation, reconstruction et génération par IA.',
+    'My thesis looks at the volumetric reconstruction of captured reality (3D Gaussian splatting and other techniques) and at the line between capture, reconstruction and AI generation.',
   ),
   items: [
     {

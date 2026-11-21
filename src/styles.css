@@ -482,6 +482,9 @@ html.brand-fade .fiche-brand { transition: opacity 0.4s var(--ease-flow), visibi
 .fiche__close { flex: none; font: 400 var(--fs-small) var(--font-text); color: var(--c-white); text-decoration: none; border: 1px solid var(--ink); border-radius: var(--radius-pill); padding: 10px 16px; }
 /* colonne de texte : titre, un seul texte explicatif, fiche technique, lien vers le projet */
 .fiche__title { font-size: 3.5rem; line-height: 1; margin-bottom: 50px; text-wrap: balance; }
+/* « Proposition non commandée » : petite inscription au-dessus du titre */
+.fiche__kind { margin-bottom: 14px; opacity: 0.6; }
+.fiche.is-open .fiche__kind { animation: rise-y 0.8s var(--ease-case) 0.4s both; }
 .fiche__body p { font: 500 1.1rem/1.5 var(--font-text); color: var(--ink-86); }
 .fiche__body p + p { margin-top: 0.9em; }
 .fiche__infos { margin: 30px 0 0; display: grid; gap: 6px; text-transform: uppercase; font: 500 0.82rem/1.45 var(--font-text); letter-spacing: 0.03em; color: var(--ink-86); }
