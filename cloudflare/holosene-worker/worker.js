@@ -15,6 +15,10 @@ const PROJETS = {
   'photographique-volume': 'Photographique-volume',
 }
 // en-têtes de la requête transmis à GitHub (vidéos : Range ; cache du navigateur : If-*)
+// Site pas encore en version finale (choix de Johann, 21/11/2026) : visible avec l'adresse, mais ni référencé par les
+// moteurs de recherche ni archivé. Le jour de la version 1.0 : PRIVE = false, puis « Publier holosene.fr.command ».
+const PRIVE = true
+const ROBOTS_PRIVE = 'User-agent: *\nDisallow:\n\nUser-agent: ia_archiver\nUser-agent: archive.org_bot\nDisallow: /\n'
 const PASS = ['accept', 'accept-encoding', 'accept-language', 'range', 'if-none-match', 'if-modified-since', 'user-agent']
 
 export default {
@@ -25,6 +29,9 @@ export default {
       return Response.redirect(url.href, 301)
     }
     if (request.method !== 'GET' && request.method !== 'HEAD') return new Response(null, { status: 405, headers: { allow: 'GET, HEAD' } })
+
+    // robots.txt : les moteurs peuvent passer (pour lire le « noindex » ci-dessous), les archives du web non
+    if (PRIVE && url.pathname === '/robots.txt') return new Response(ROBOTS_PRIVE, { headers: { 'content-type': 'text/plain; charset=utf-8', 'x-robots-tag': 'noindex' } })
 
     // quel site, et quel préfixe d'un côté et de l'autre
     let from = '/Portfolio/', to = '/', rest = url.pathname.slice(1)
@@ -48,6 +55,7 @@ export default {
     out.headers.set('strict-transport-security', 'max-age=31536000')
     out.headers.set('x-content-type-options', 'nosniff')
     out.headers.set('referrer-policy', 'strict-origin-when-cross-origin')
+    if (PRIVE) out.headers.set('x-robots-tag', 'noindex, nofollow, noarchive, nosnippet, noimageindex')
     out.headers.delete('x-github-request-id')
     return out
   },

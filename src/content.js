@@ -436,12 +436,12 @@ export const studio = T(
 
 /** À propos, en fin de page. **…** : mots mis en avant. Uniquement des informations fournies par Johann. */
 export const about = [
-  T('Je suis designer d’interaction et creative technologist junior, en **master Design (Environnements numériques)** à la Faculté des arts de Strasbourg, après un **DNMADe Design numérique**.',
-    'I am an interaction designer and junior creative technologist, studying for a **master’s in Design (Digital Environments)** at the Faculty of Arts in Strasbourg, after a **degree in Digital Design (DNMADe)**.'),
+  T('Je suis designer d’interaction et creative technologist junior, en **master Design (Environnements numériques)** à la Faculté des arts de Strasbourg.',
+    'I am an interaction designer and junior creative technologist, studying for a **master’s in Design (Digital Environments)** at the Faculty of Arts in Strasbourg.'),
   T('Je conçois des **expériences interactives** (sites immersifs, interfaces, scénographies numériques), du concept au prototype codé en **WebGL, WebGPU et Three.js**.',
     'I design **interactive experiences** (immersive websites, interfaces, digital scenography), from concept to a prototype coded in **WebGL, WebGPU and Three.js**.'),
-  T('Plusieurs projets sont des **propositions non commandées**, pensées pour des institutions comme la NASA, National Geographic ou le Musée océanographique de Monaco.',
-    'Several projects are **unsolicited proposals**, designed for institutions such as NASA, National Geographic or the Musée océanographique de Monaco.'),
+  T('Plusieurs projets sont des **propositions non commandées**, pensées pour des institutions comme National Geographic ou le Musée océanographique de Monaco.',
+    'Several projects are **unsolicited proposals**, designed for institutions such as National Geographic or the Musée océanographique de Monaco.'),
   T('En parallèle, je mène une **recherche en design** sur le réel capturé et sur ce qui le sépare de la **génération par IA**.',
     'Alongside, I carry out **design research** on captured reality and on what separates it from **AI generation**.'),
 ]
