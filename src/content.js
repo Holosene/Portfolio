@@ -76,7 +76,6 @@ export const projects = [
     genre: T('4D Gaussian splatting', '4D Gaussian splatting'),   // à côté du titre : l'outil ou la technique, pas une description du projet
     title: '4Dérives',
     year: '2025-26',
-    milieu: T('Rivière', 'River'),
     cover: '4derives/080.webp',
     spec: [
       [T('Capteur', 'Sensor'), T('GoPro, à hauteur d’yeux', 'GoPro, at eye level')],
@@ -116,7 +115,6 @@ export const projects = [
     genre: T('Design interactif, WebGL 2', 'Interaction design, WebGL 2'),   // à côté du titre : l'outil ou la technique, pas une description du projet
     title: 'NASA Voyageur 1',
     year: '2026',
-    milieu: T('Espace', 'Space'),
     cover: 'voyageur-1/vignette.webp',
     coverMobile: 'voyageur-1/vignette-mobile.webp',
     coverCredit: T('Images du disque : NASA / JPL ; décodage : Ron Barry (2017)', 'Record images: NASA / JPL; decoding: Ron Barry (2017)'),
@@ -165,7 +163,6 @@ export const projects = [
     genre: T('Datavisualisation, WebGPU, three.js', 'Data visualisation, WebGPU, three.js'),   // à côté du titre : l'outil ou la technique, pas une description du projet
     title: 'National Geographic',
     year: '2026',
-    milieu: T('Globe terrestre, courants marins', 'Globe, ocean currents'),
     cover: 'mondes-immerges-site/vignette.webp',
     coverMobile: 'mondes-immerges-site/vignette-mobile.webp',
     coverCredit: T('Courants : NASA / JPL OSCAR ; relief : NOAA ETOPO1', 'Currents: NASA / JPL OSCAR; relief: NOAA ETOPO1'),
@@ -220,7 +217,6 @@ export const projects = [
     genre: T('UI/UX design, Figma', 'UI/UX design, Figma'),   // à côté du titre : l'outil ou la technique, pas une description du projet
     title: 'Duo News',
     year: '2026',
-    milieu: T('Presse numérique', 'Digital press'),
     cover: 'duo-news/vignette.webp',
     coverMobile: 'duo-news/vignette-mobile.webp',   // vignette carrée (mobile) : l'image de couverture seule
     coverDark: 'duo-news/vignette-sombre.webp', coverMobileDark: 'duo-news/vignette-mobile-sombre.webp',   // mode sombre : même image, fond sombre
@@ -260,7 +256,6 @@ export const projects = [
     genre: T('Design interactif, SHARP, Gaussian splatting', 'Interaction design, SHARP, Gaussian splatting'),   // à côté du titre : l'outil ou la technique, pas une description du projet
     title: 'Volume Photographique',
     year: '2025-26',
-    milieu: T('Littoral', 'Coastline'),
     cover: 'photographique-volume/vignette.webp',
     coverCredit: T('Rendu : Johann Arata, d’après les photographies de Nicolas Floc’h', 'Render: Johann Arata, from Nicolas Floc’h’s photographs'),
     spec: [
@@ -300,7 +295,6 @@ export const projects = [
     genre: T('Scénographie numérique, Gaussian splatting, Blender', 'Digital scenography, Gaussian splatting, Blender'),   // à côté du titre : l'outil ou la technique, pas une description du projet
     title: 'Musée océanographique Monaco',
     year: '2026',
-    milieu: T('Grands fonds', 'Deep sea'),
     cover: 'dumbo/vignette.webp',
     coverMobile: 'dumbo/vignette-mobile.webp',
     coverCredit: T('Capture du site : Johann Arata ; créatures : vidéos du Schmidt Ocean Institute', 'Site capture: Johann Arata; creatures: Schmidt Ocean Institute footage'),
@@ -348,7 +342,6 @@ export const projects = [
     genre: T('Édition, InDesign', 'Editorial design, InDesign'),   // à côté du titre : l'outil ou la technique, pas une description du projet
     title: 'Mondes Immergés',
     year: '2024-25',
-    milieu: T('Recherche', 'Research'),
     cover: 'mondes-immerges/011.webp',
     spec: [
       [T('Forme', 'Format'), T('Article de licence édité', 'Published bachelor’s paper')],

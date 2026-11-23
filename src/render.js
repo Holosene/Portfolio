@@ -91,7 +91,6 @@ export function render(lang) {
     // fiche technique : étiquettes alignées, sans séparateur
     const info = (label, values, todo = false) => (values.length ? `<div class="fiche__info${todo ? ' todo' : ''}"><dt>${esc(t(label))}</dt>${values.map((v) => `<dd>${v}</dd>`).join('')}</div>` : '')
     const infos = [
-      info({ fr: 'Milieu', en: 'Setting' }, [esc(t(p.milieu))]),
       info(ui.role, [esc(t(p.role))], !!p.role?.todo),
       info(ui.tools, [esc(p.tools)]),
       info(ui.year, [esc(p.year)]),
