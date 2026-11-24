@@ -49,7 +49,7 @@ function prerender() {
       // langue : un navigateur non francophone, à sa première visite de l'accueil français, part vers /en/ avant que quoi
       // que ce soit d'autre se charge (le serveur le fait déjà quand il le peut : vercel.json) ; un choix fait au
       // bouton FR / EN est respecté
-      const langBoot = lang === 'fr' ? `<script>try{var l=localStorage.getItem('lang');if(!l&&!/(^|; )lang=/.test(document.cookie)&&!/^fr\\b/i.test(navigator.language||'fr'))location.replace('en/'+location.hash)}catch(e){}</script>\n  ` : ''
+      const langBoot = lang === 'fr' ? `<script>try{var l=localStorage.getItem('lang');if(!l&&!/(^|; )lang=/.test(document.cookie)&&!/^fr\\b/i.test(navigator.language||'fr'))location.replace('en/'+location.search+location.hash)}catch(e){}</script>\n  ` : ''
       return html.replace(`<!--HEAD:${lang}-->`, langBoot + head).replace(`<!--APP:${lang}-->`, render(lang))
     },
   }

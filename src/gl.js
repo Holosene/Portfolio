@@ -15,6 +15,7 @@ import { HERO } from './hero-progress.js'
 import { LOGO_TUNE } from './logo-tune.js'
 import { S_AXIS, S_WIDTH_REF } from './monogram-path.js'
 import { setNameHeart, setNameRhythm, nameHeartDur } from './name-bulge.js'
+import { QUALITY } from './quality.js'
 
 // roue du logo-kit (source de vérité) : irisColor(p), irisRing(p, Ro) ; irisAt(t) pour une position t sur le cercle
 // (0 = en haut, sens horaire, y vers le bas). fwidth vient de OES_standard_derivatives (repli : 1 px).
@@ -812,7 +813,7 @@ export function createGL(canvas, { reduced }) {
     const phone = W < 760 && matchMedia('(pointer: coarse)').matches
     // téléphone : 1,75× pour les vignettes (coût) ; mais tant que le gros logo de l'accueil est dessiné ici (heroHi), la
     // densité réelle de l'écran (3× sur iPhone, jusqu'à 4× sur Android) : sinon la toile est agrandie par le navigateur et ses bords sont flous
-    dpr = Math.min(devicePixelRatio || 1, phone ? (heroHi ? 4 : 1.75) : Math.max(2, Math.min(8, Math.sqrt(PX_BUDGET / Math.max(1, W * H)))))
+    dpr = Math.min(devicePixelRatio || 1, phone ? (heroHi ? 4 : 1.75) : Math.max(2, Math.min(8, Math.sqrt(PX_BUDGET / Math.max(1, W * H)))), QUALITY.maxDpr)
     canvas.width = Math.round(W * dpr); canvas.height = Math.round(H * dpr)
   }
   resize(); addEventListener('resize', resize)
@@ -834,7 +835,17 @@ export function createGL(canvas, { reduced }) {
   const perfQ = [], perfGpu = [], perfJs = []
   let perfEl = null
   if (perfOn) { perfEl = document.createElement('div'); perfEl.style.cssText = 'position:fixed;left:8px;bottom:8px;z-index:9999;padding:6px 10px;border-radius:8px;background:rgb(0 0 0 / .8);color:#fff;font:12px/1.4 ui-monospace,monospace;pointer-events:none'; document.body.append(perfEl) }
+  // contexte perdu (pilote GPU réinitialisé, mise en veille, trop de contextes) : repli sur les images de la page,
+  // comme sans WebGL ; la toile est cachée, plus rien n'y est dessiné
+  let lost = false
+  canvas.addEventListener('webglcontextlost', () => {
+    lost = true
+    const r = document.documentElement
+    r.classList.remove('has-gl', 'lens-on'); canvas.style.display = 'none'
+    views.forEach((v) => { if (v.cv) v.cv.style.display = 'none' })
+  })
   function frame(now) {
+    if (lost) return
     if (!perfOn) return draw(now)
     const q = tq?.createQueryEXT(); if (q) tq.beginQueryEXT(tq.TIME_ELAPSED_EXT, q)
     const t0 = performance.now(); draw(now); perfJs.push(performance.now() - t0)

@@ -57,6 +57,9 @@ export function nameTrace(svg, mapUrl) {
   const api = { ready: false, shown: false }
   const gl = cv.getContext('webgl', { premultipliedAlpha: true, antialias: false })
   if (!gl) return api
+  // contexte perdu : le nom reste en SVG (comme sans WebGL)
+  let lost = false
+  cv.addEventListener('webglcontextlost', () => { lost = true; api.ready = false; api.show(false) })
   const sh = (t, s) => { const o = gl.createShader(t); gl.shaderSource(o, s); gl.compileShader(o); return o }
   const prog = gl.createProgram(); gl.attachShader(prog, sh(gl.VERTEX_SHADER, VS)); gl.attachShader(prog, sh(gl.FRAGMENT_SHADER, FS)); gl.linkProgram(prog)
   if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) return api
@@ -93,8 +96,12 @@ export function nameTrace(svg, mapUrl) {
   }
   im.src = mapUrl
 
+  let ink = null   // couleur déjà envoyée : le nom n'est redessiné que si elle change vraiment
   const readInk = () => {
-    const c = getComputedStyle(svg).color.match(/[\d.]+/g)?.map(Number) || [0, 0, 0]
+    const s = getComputedStyle(svg).color
+    if (s === ink) return
+    ink = s
+    const c = s.match(/[\d.]+/g)?.map(Number) || [0, 0, 0]
     gl.uniform3f(U.uInk, c[0] / 255, c[1] / 255, c[2] / 255)
     if (api.shown && last != null) api.draw(last)
   }
@@ -147,6 +154,7 @@ export function nameTrace(svg, mapUrl) {
   if (import.meta.env.DEV) api._read = () => { const d = new Uint8Array(cv.width * cv.height * 4); gl.readPixels(0, 0, cv.width, cv.height, gl.RGBA, gl.UNSIGNED_BYTE, d); return { d, w: cv.width, h: cv.height } }
   /** Tracé en cours : le canvas à la place du SVG. */
   api.show = (on) => {
+    if (lost) on = false
     if (on === api.shown) return
     api.shown = on
     cv.style.visibility = on ? 'visible' : 'hidden'

@@ -65,6 +65,9 @@ export default {
     out.headers.set('referrer-policy', 'strict-origin-when-cross-origin')
     if (PRIVE) out.headers.set('x-robots-tag', 'noindex, nofollow, noarchive, nosnippet, noimageindex')
     out.headers.delete('x-github-request-id')
+    // fichiers versionnés par Vite (nom suivi d'une empreinte, ex. main-HE6pYvvQ.js) : leur contenu ne change jamais, le
+    // navigateur les garde un an sans redemander (GitHub Pages n'envoie que 10 min). Le reste garde l'en-tête d'origine.
+    if (res.status === 200 && /\/assets\/[^/]+-[\w-]{8}\.[a-z0-9]+$/i.test(url.pathname)) out.headers.set('cache-control', 'public, max-age=31536000, immutable')
     return out
   },
 }

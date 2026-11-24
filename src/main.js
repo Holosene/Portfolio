@@ -5,6 +5,7 @@ import { FLOW, updateFlow } from './flow.js'
 import Lenis from 'lenis'
 import { createGL, loaderRadius } from './gl.js'
 import { createBackdrop } from './backdrop.js'
+import { QUALITY } from './quality.js'
 import { IRIS } from './iris-config.js'
 import { startFxCss } from './fx-css.js'
 import { nameTrace } from './name-trace.js'
@@ -241,6 +242,7 @@ function syncFiche() {
   }
   root.classList.toggle('fiche-open', !!open)
   document.body.style.overflow = open ? 'hidden' : ''
+  if (heroBgV >= 0) heroBgPlay(heroBgV > 0)   // vidéo de l'accueil : arrêtée sous la fiche, relancée à la fermeture
   if (open) {
     unphase(open, 'is-closing', 'is-under')
     open.classList.add('is-open'); phase(open, 'is-entering')
@@ -546,7 +548,10 @@ const heroBgStream = () => {
   if (!window.MediaSource && !window.ManagedMediaSource) return (heroStream = Promise.resolve(native()))
   return (heroStream = import('hls.js/light').then(({ default: Hls }) => {
     if (!Hls.isSupported()) return native()
-    const hls = new Hls({ capLevelToPlayerSize: true, capLevelOnFPSDrop: true, abrEwmaDefaultEstimate: 30e6, maxBufferLength: 40, enableWorker: false,
+    const hls = new Hls({ capLevelToPlayerSize: true, capLevelOnFPSDrop: true, abrEwmaDefaultEstimate: 30e6, enableWorker: false,
+      // 10 s d'avance (au lieu de 40 : tout le montage de 27 s, 78 Mo en 2400p, partait dès l'arrivée, même si l'on
+      // quittait l'accueil aussitôt) ; la vidéo s'efface au premier défilement
+      maxBufferLength: 10, maxMaxBufferLength: 20, backBufferLength: 10,
       // flux en panne : MP4 de secours après deux essais, plutôt qu'une longue attente sur l'image fixe
       fragLoadPolicy: { default: { maxTimeToFirstByteMs: 10000, maxLoadTimeMs: 120000, timeoutRetry: { maxNumRetry: 2, retryDelayMs: 0, maxRetryDelayMs: 0 }, errorRetry: { maxNumRetry: 2, retryDelayMs: 1000, maxRetryDelayMs: 4000 } } } })
     let down = false
@@ -560,17 +565,21 @@ const heroBgStream = () => {
 let heroBgWant = false
 // Safari peut refuser un play() lancé pendant le branchement du flux : on relance dès que la vidéo peut jouer,
 // ou, si la lecture automatique est refusée (iPhone en économie d'énergie), au premier geste
+let heroBgRetry = null   // relance en attente (un seul jeu d'écouteurs à la fois)
 const heroBgGo = () => {
-  if (!heroBgWant || !heroBg.paused) return
+  if (!heroBgWant || !heroBg.paused || heroBgRetry) return
   heroBg.preload = 'auto'
   heroBg.play().catch(() => {
-    const off = () => { heroBg.removeEventListener('canplay', again); window.removeEventListener('pointerdown', again); window.removeEventListener('keydown', again) }
+    const off = () => { heroBgRetry = null; heroBg.removeEventListener('canplay', again); window.removeEventListener('pointerdown', again); window.removeEventListener('keydown', again) }
     const again = () => { if (!heroBg.paused) return off(); if (heroBgWant) heroBg.play().then(off, () => {}) }
+    if (heroBgRetry) return
+    heroBgRetry = again
     heroBg.addEventListener('canplay', again); window.addEventListener('pointerdown', again); window.addEventListener('keydown', again)
   })
 }
 const heroBgPlay = (on) => {
   if (!heroBg || !heroBg.play || reduced) return
+  on = on && !current   // fiche ouverte (opaque, plein écran) : la vidéo est cachée, rien n'est lu ni téléchargé
   heroBgWant = on
   if (on && heroBg.paused && root.classList.contains('intro-done')) {
     heroBgStream().then(heroBgGo)
@@ -790,7 +799,7 @@ let gl = null, backdrop = null
 const glMade = new Promise((done) => requestAnimationFrame(() => setTimeout(() => {
   try { gl = createGL(document.querySelector('.gl-canvas'), { reduced }) } catch (err) { console.warn(err) }
   // fond : formes colorées derrière une plaque dépolie, qui défilent avec la page et réagissent au curseur
-  try { backdrop = createBackdrop(document.querySelector('.bg-canvas'), { reduced }) } catch (err) { console.warn(err) }
+  if (QUALITY.backdrop) try { backdrop = createBackdrop(document.querySelector('.bg-canvas'), { reduced }) } catch (err) { console.warn(err) }
   if (backdrop) { root.classList.add('has-backdrop'); backdrop.setVeil(heroBg && heroBgV !== 0 ? 1 - 0.65 * (heroBgV < 0 ? 1 : heroBgV) : 1) }   // voile : image de l'accueil sous les couleurs   // l'image de l'accueil passe sous l'arrière-plan animé (styles.css, .hero__bg)
   done(gl)
 })))
@@ -866,7 +875,8 @@ function loop(t) {
   ficheFrame(t)
   updateHero(t, hero)   // avancée de la scène d'accueil (freinée sur écran tactile)
   updateFlow(t)   // roue « flux » : une texture par image, partagée par le chargeur, le logo et la lentille
-  backdrop?.frame(t)
+  // fond : rien à dessiner quand une fiche (opaque, plein écran) le recouvre entièrement, hors rideau d'ouverture
+  if (!current || current.classList.contains('is-entering')) backdrop?.frame(t)
   gl?.frame(t)
   if (!reduced) scrollEffects()
   requestAnimationFrame(loop)
@@ -933,7 +943,9 @@ addEventListener('popstate', () => { if (location.pathname !== shownPath) locati
 { let t = null
   addEventListener('scroll', () => {
     if (!root.classList.contains('intro-done')) return
-    root.classList.add('cta-idle-off'); clearTimeout(t)
+    // add() réécrit l'attribut même si la classe est déjà là (et réveille les observateurs de <html>) : une fois suffit
+    if (!root.classList.contains('cta-idle-off')) root.classList.add('cta-idle-off')
+    clearTimeout(t)
     t = setTimeout(() => root.classList.remove('cta-idle-off'), 2600)
   }, { passive: true }) }
 

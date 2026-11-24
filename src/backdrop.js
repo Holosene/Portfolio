@@ -144,7 +144,17 @@ export function createBackdrop(canvas, { reduced }) {
     size(); new ResizeObserver(size).observe(glass); addEventListener('resize', size)
   }
 
+  // contexte perdu : repli sur le fond uni du thème (comme sans WebGL), copies des bandes retirées
+  let lost = false
+  canvas.addEventListener('webglcontextlost', () => {
+    lost = true; canvas.style.display = 'none'
+    root.classList.remove('has-backdrop')
+    edge?.classList.remove('edge--live'); edge?.querySelector('.edge__bg')?.remove()
+    glass?.classList.remove('glass--live'); glass?.querySelector('.topbar__bg')?.remove()
+    ectx = gctx = null
+  })
   function frame(now) {
+    if (lost) return
     const dt = Math.min(0.05, (now - prev) / 1000); prev = now
     const time = reduced ? 0 : (now - t0) / 1000
     // présence du curseur : 1 en mouvement, retombe doucement après 2,5 s d'immobilité
