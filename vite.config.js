@@ -25,7 +25,7 @@ function prerender() {
         '@context': 'https://schema.org',
         '@graph': [
           { '@type': 'Organization', '@id': `${SITE_URL}#studio`, name: 'Holosene', url: SITE_URL, logo: `${SITE_URL}icons/icon-512.png`, founder: { '@id': `${SITE_URL}#johann` }, email: site.email },
-          { '@type': 'Person', '@id': `${SITE_URL}#johann`, name: site.person, jobTitle: lang === 'fr' ? 'Designer numérique' : 'Digital designer', email: `mailto:${site.email}`, sameAs: site.socials.map((s) => s.href).filter((h) => h.includes('github')) },
+          { '@type': 'Person', '@id': `${SITE_URL}#johann`, name: site.person, jobTitle: lang === 'fr' ? 'Designer d’interaction et creative technologist' : 'Interaction designer and creative technologist', email: `mailto:${site.email}`, sameAs: site.socials.map((s) => s.href).filter((h) => h.includes('github')) },
         ],
       }
       const head = `<title>${esc(title)}</title>

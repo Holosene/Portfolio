@@ -26,9 +26,7 @@ export const site = {
   ),
   // CV en PDF, téléchargé depuis le bouton « Curriculum vitae » du contact : déposer le fichier à cette adresse dans public/
   cv: 'cv/johann-arata-cv.pdf',
-  socials: [
-    { label: 'GitHub', href: 'https://github.com/holosene' },
-  ],
+  socials: [],
 }
 
 export const ui = {
