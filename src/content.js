@@ -15,10 +15,10 @@ export const site = {
   email: 'arata.johann@gmail.com',
   url: 'https://holosene.fr/portfolio/',
   intent: T(
-    'Je conçois des expériences interactives, du concept au prototype codé.',
-    'I design interactive experiences, from concept to coded prototype.',
+    'Je conçois des expériences interactives, du concept au prototype fonctionnel.',
+    'I design interactive experiences, from concept to working prototype.',
   ),
-  baseline: T('Design d’interaction · Creative coding · UI/UX · Scénographie numérique', 'Interaction design · Creative coding · UI/UX · Digital scenography'),
+  baseline: T('Design d’interaction · Direction artistique · UI/UX · Scénographie numérique', 'Interaction design · Art direction · UI/UX · Digital scenography'),
   signature: T('Portfolio de Johann Arata', 'Portfolio of Johann Arata'),
   description: T(
     'Holosene, portfolio de Johann Arata, designer d’interaction et creative technologist junior : sites immersifs, WebGL, UI/UX et scénographie numérique.',
@@ -136,7 +136,7 @@ export const projects = [
       'Chaque image se reforme en gaussiennes, étirées le long des traces du signal et détachées là où il l’a abîmée.',
       'Each image re-forms as Gaussians, stretched along the signal’s scan lines and pulled apart where it damaged them.',
     ),
-    staging: T('Un site WebGL 2 sans bibliothèque, accompagné des sons du disque.', 'A library-free WebGL 2 site, set to the record’s sounds.'),
+    staging: T('Un site interactif en WebGL 2, accompagné des sons du disque.', 'An interactive WebGL 2 site, set to the record’s sounds.'),
     learned: TODO('ce que tu as appris, les limites', 'what you learned, the limits'),
     role: TODO('ton rôle', 'your role'),
     tools: 'WebGL 2, TypeScript, Vite, Web Audio',
@@ -379,8 +379,8 @@ export const projects = [
 /** Recherche : le profil de chercheur, au-delà des projets. Uniquement des éléments fournis par Johann. */
 /** Projets choisis : courte présentation de la section. */
 export const workIntro = T(
-  'Scénographie numérique en 3D temps réel, sites immersifs en WebGL et WebGPU, datavisualisation, Gaussian splatting et design d’interface : chaque projet va du concept au prototype codé.',
-  'Real-time 3D digital scenography, immersive websites in WebGL and WebGPU, data visualisation, Gaussian splatting and interface design: each project goes from concept to coded prototype.',
+  'Scénographie numérique en 3D temps réel, sites immersifs en WebGL et WebGPU, datavisualisation, Gaussian splatting et design d’interface : chaque projet va du concept au prototype fonctionnel.',
+  'Real-time 3D digital scenography, immersive websites in WebGL and WebGPU, data visualisation, Gaussian splatting and interface design: each project goes from concept to working prototype.',
 )
 
 export const research = {
@@ -429,10 +429,10 @@ export const studio = T(
 
 /** À propos, en fin de page. **…** : mots mis en avant. Uniquement des informations fournies par Johann. */
 export const about = [
-  T('Je suis designer d’interaction et creative technologist junior, en **master Design (Environnements numériques)** à la Faculté des arts de Strasbourg.',
-    'I am an interaction designer and junior creative technologist, studying for a **master’s in Design (Digital Environments)** at the Faculty of Arts in Strasbourg.'),
-  T('Je conçois des **expériences interactives** (sites immersifs, interfaces, scénographies numériques), du concept au prototype codé en **WebGL, WebGPU et Three.js**.',
-    'I design **interactive experiences** (immersive websites, interfaces, digital scenography), from concept to a prototype coded in **WebGL, WebGPU and Three.js**.'),
+  T('Je suis designer d’interaction et creative technologist junior, en **M1 de master Design (Environnements numériques)** à la Faculté des arts de Strasbourg.',
+    'I am an interaction designer and junior creative technologist, in the **first year of a master’s in Design (Digital Environments)** at the Faculty of Arts in Strasbourg.'),
+  T('Je conçois des **expériences interactives** (sites immersifs, interfaces, scénographies numériques) et j’en assure la **direction artistique et technique**, jusqu’au prototype fonctionnel en WebGL, WebGPU et Three.js, développé sans code avec des **outils d’IA**.',
+    'I design **interactive experiences** (immersive websites, interfaces, digital scenography) and lead their **art and technical direction**, through to a working prototype in WebGL, WebGPU and Three.js, built without code using **AI tools**.'),
   T('Plusieurs projets sont des **propositions non commandées**, pensées pour des institutions comme National Geographic ou le Musée océanographique de Monaco.',
     'Several projects are **unsolicited proposals**, designed for institutions such as National Geographic or the Musée océanographique de Monaco.'),
   T('En parallèle, je mène une **recherche en design** sur le réel capturé et sur ce qui le sépare de la **génération par IA**.',
