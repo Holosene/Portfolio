@@ -34,6 +34,13 @@ export function heroVideo(heroBg, { reduced, covered }) {
       let down = false
       const fail = () => { if (down) return; down = true; heroBg.removeEventListener('error', fail); hls.destroy(); fallback(); heroBgGo() }
       hls.on(Hls.Events.ERROR, (_, d) => { if (d.fatal) fail() })
+      // qualité plafonnée à 1600p (accord de Johann, 25/11/2026) : le 2400p pesait 2,2 fois plus pour une image sous un
+      // voile, qui s'efface au premier défilement
+      hls.on(Hls.Events.MANIFEST_PARSED, (_, d) => {
+        let cap = -1
+        d.levels.forEach((l, i) => { if (l.height <= 1600 && (cap < 0 || l.height > d.levels[cap].height)) cap = i })
+        if (cap >= 0) hls.autoLevelCapping = cap
+      })
       heroBg.addEventListener('error', fail)
       mp4.forEach((x) => { x.dataset.src = x.getAttribute('src'); x.removeAttribute('src') })
       hls.loadSource(url); hls.attachMedia(heroBg)
