@@ -1,4 +1,4 @@
-# Publie le site compilé sur GitHub Pages (johann-ar.github.io/Portfolio/), servi sous https://holosene.fr/ par le
+# Publie le site compilé sur GitHub Pages (holosene.github.io/Portfolio/), servi sous https://holosene.fr/ par le
 # Worker Cloudflare (cloudflare/holosene-worker) : la page HOLOSENE à la racine, le portfolio dans /portfolio/
 # (scripts/site-holosene.mjs), les projets dans /portfolio/<nom>/ (relayés depuis leur propre dépôt).
 # GitHub Pages ne compile rien : sans ce workflow, il servait les fichiers sources (index.html non compilé, page vide).

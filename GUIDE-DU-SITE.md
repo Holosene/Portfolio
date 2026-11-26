@@ -1,7 +1,7 @@
 # Guide du site : tout modifier et publier sans assistant
 
 Ce guide permet de garder la main sur holosene.fr : changer un texte, une image, un projet, puis mettre en ligne.
-Il ne suppose rien d'autre qu'un Mac, le dossier `Projet Portfolio` et un accès au compte GitHub `Johann-Ar`.
+Il ne suppose rien d'autre qu'un Mac, le dossier `Projet Portfolio` et un accès au compte GitHub `holosene` (ancien nom `Johann-Ar`, renommé le 26/11/2026).
 
 Écrit le 23 novembre 2026. Si une commande ne marche plus, voir « En cas de problème » à la fin.
 
@@ -11,13 +11,13 @@ Il ne suppose rien d'autre qu'un Mac, le dossier `Projet Portfolio` et un accès
 
 | Adresse en ligne | Ce que c'est | Dossier sur le Mac | Dépôt GitHub |
 |---|---|---|---|
-| holosene.fr/ | page d'accueil HOLOSENE | `Portfolio/holosene/index.html` | `Johann-Ar/Portfolio` |
-| holosene.fr/portfolio/ | le portfolio (FR) | `Portfolio/` | `Johann-Ar/Portfolio` |
+| holosene.fr/ | page d'accueil HOLOSENE | `Portfolio/holosene/index.html` | `holosene/Portfolio` |
+| holosene.fr/portfolio/ | le portfolio (FR) | `Portfolio/` | `holosene/Portfolio` |
 | holosene.fr/portfolio/en/ | le portfolio (EN) | même dossier, même fichier de textes | idem |
-| holosene.fr/portfolio/dumbo-biovolume/ | projet Dumbo | `Dumbo-biovolume/` | `Johann-Ar/Dumbo-biovolume` |
-| holosene.fr/portfolio/mondes-immerges/ | projet Mondes immergés (et `/globe/`) | `Mondes-immerges/` | `Johann-Ar/Mondes-immerges` |
-| holosene.fr/portfolio/voyageur-1/ | projet Voyageur 1 | `Voyageur-1/` | `Johann-Ar/Voyageur-1` |
-| holosene.fr/portfolio/photographique-volume/ | projet Volume photographique | `photographique-volume/` | `Johann-Ar/photographique-volume` |
+| holosene.fr/portfolio/dumbo-biovolume/ | projet Dumbo | `Dumbo-biovolume/` | `holosene/Dumbo-biovolume` |
+| holosene.fr/portfolio/mondes-immerges/ | projet Mondes immergés (et `/globe/`) | `Mondes-immerges/` | `holosene/Mondes-immerges` |
+| holosene.fr/portfolio/voyageur-1/ | projet Voyageur 1 | `Voyageur-1/` | `holosene/Voyageur-1` |
+| holosene.fr/portfolio/photographique-volume/ | projet Volume photographique | `photographique-volume/` | `holosene/photographique-volume` |
 
 **Comment ça tient ensemble.** Chaque dépôt est publié gratuitement par GitHub Pages, automatiquement, à chaque
 envoi (« push ») sur la branche `main`. Un petit programme chez Cloudflare (le « Worker »,
@@ -275,7 +275,7 @@ pour sortir).
 
 ### 6.3 Suivre la mise en ligne
 
-Sur https://github.com/Johann-Ar/Portfolio/actions : la publication « GitHub Pages » apparaît. Pastille jaune = en
+Sur https://github.com/holosene/Portfolio/actions : la publication « GitHub Pages » apparaît. Pastille jaune = en
 cours (2 à 5 min) ; verte = en ligne ; rouge = échec (cliquer pour lire l'erreur ; le site en ligne reste
 l'ancienne version, rien n'est cassé). Recharger ensuite holosene.fr/portfolio/ avec ⌘ ⇧ R.
 
@@ -384,5 +384,5 @@ cd "/Users/johann/Documents/Projet Portfolio/Portfolio"
 | annuler mes modifications non publiées d'un fichier | `git restore <fichier>` |
 | récupérer la dernière version en ligne | `git pull` |
 
-Comptes à garder sous la main : GitHub (`Johann-Ar`), Cloudflare (DNS et Worker de holosene.fr), Hostinger
+Comptes à garder sous la main : GitHub (`holosene`, ancien `Johann-Ar` ; l'ancien compte Holosene s'appelle désormais `holosene-archive`), Cloudflare (DNS et Worker de holosene.fr), Hostinger
 (achat et renouvellement du domaine).

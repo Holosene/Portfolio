@@ -1,18 +1,15 @@
 /**
  * holosene.fr : un seul domaine, plusieurs sites GitHub Pages (chacun se republie seul, à chaque push sur son dépôt).
- *   holosene.fr/                     page HOLOSENE        ← johann-ar.github.io/Portfolio/
- *   holosene.fr/portfolio/…          portfolio            ← johann-ar.github.io/Portfolio/portfolio/…
- *   holosene.fr/portfolio/<nom>/…    projet               ← johann-ar.github.io/<Dépôt>/…
+ *   holosene.fr/                     page HOLOSENE        ← holosene.github.io/Portfolio/
+ *   holosene.fr/portfolio/…          portfolio            ← holosene.github.io/Portfolio/portfolio/…
+ *   holosene.fr/portfolio/<nom>/…    projet               ← holosene.github.io/<Dépôt>/…
  *   holosene.fr/utsubo-coverletter/… lettre de motivation Utsubo ← lettre-utsubo.pages.dev/utsubo-coverletter/… (Cloudflare Pages)
  *   www.holosene.fr/…                redirigé vers holosene.fr/…
  * Pour ajouter un projet : une ligne dans PROJETS (nom dans l'adresse → nom exact du dépôt, la casse compte).
  * Publication : « Publier holosene.fr.command » (wrangler deploy).
  */
-const GH = 'https://johann-ar.github.io'
-// 26/11 : échange des noms de comptes GitHub (Johann-Ar → holosene). Pendant la transition, si l'ancienne adresse répond
-// 404 (compte déjà renommé), on essaie la nouvelle. L'ancienne est essayée d'abord : avant le renommage, holosene.github.io
-// sert encore les vieilles copies de l'ancien compte Holosene. Une fois le renommage fait : GH = GH_NOUVEAU, GH_NOUVEAU = null.
-const GH_NOUVEAU = 'https://holosene.github.io'
+// compte GitHub « holosene » (ancien nom Johann-Ar, renommé le 26/11/2026)
+const GH = 'https://holosene.github.io'
 // 24/11 : sites servis ailleurs que sur GitHub Pages, au même chemin des deux côtés (chemin → origine)
 const AILLEURS = { 'utsubo-coverletter': 'https://lettre-utsubo.pages.dev' }
 const PROJETS = {
@@ -56,11 +53,7 @@ export default {
     const headers = new Headers()
     for (const h of PASS) if (request.headers.has(h)) headers.set(h, request.headers.get(h))
     const surGH = origine === GH
-    let res = await fetch(origine + from + rest + url.search, { method: request.method, headers, redirect: 'manual' })
-    if (surGH && GH_NOUVEAU && res.status === 404) {
-      const res2 = await fetch(GH_NOUVEAU + from + rest + url.search, { method: request.method, headers, redirect: 'manual' })
-      if (res2.status !== 404) res = res2, origine = GH_NOUVEAU
-    }
+    const res = await fetch(origine + from + rest + url.search, { method: request.method, headers, redirect: 'manual' })
 
     const out = new Response(res.body, res)
     // redirections de GitHub (dossier sans « / » final…) : ramenées sous holosene.fr
