@@ -1,3 +1,32 @@
+# holosene.fr
+
+Source of [holosene.fr](https://holosene.fr/), the portfolio of Johann Arata, interaction designer and creative technologist.
+
+[![holosene.fr](https://raw.githubusercontent.com/holosene/Portfolio/main/public/media/accueil-fond.webp)](https://holosene.fr/)
+
+**Stack:** hand-written WebGL (no 3D library), Vite, static pre-rendering, FR/EN
+
+## Highlights
+
+- Pages are pre-rendered at build time: content is readable without JavaScript.
+- Custom WebGL renderer (`src/gl.js`): dot screen, glass thumbnails, lens effect. Unchanged frames are not redrawn.
+- The loader is drawn in a worker so it stays smooth while WebGL warms up.
+- Content Security Policy generated at build time, scripts allowed by SHA-256 hash. No trackers.
+- Built and deployed to GitHub Pages on every push to `main`, served under holosene.fr by a Cloudflare Worker (`cloudflare/holosene-worker/`), which also proxies each project from its own repository.
+
+## Getting started
+
+```bash
+npm install
+npm run dev       # http://localhost:5173
+npm run build     # dist/
+```
+
+---
+
+<details>
+<summary><strong>Version française</strong></summary>
+
 # Holosene
 
 Site du studio Holosene (Johann Arata) : captation, reconstruction, 3D temps réel.
@@ -44,7 +73,9 @@ npm run todo      # liste des textes encore à fournir dans src/content.js
 
 ## Publication
 
-Hébergement : **Vercel** (`vercel.json`), projet relié au dépôt : un aperçu par branche, la production depuis la
-branche par défaut. `SITE_URL` (variable d’environnement, par défaut https://holosene.vercel.app/) fixe l’adresse
-canonique, les liens `hreflang`, `robots.txt` et `sitemap.xml`.
-`.github/workflows/ci.yml` vérifie seulement que le site se compile (aucune publication depuis GitHub).
+Chaque envoi sur `main` compile le site et le publie sur GitHub Pages (`.github/workflows/pages.yml`, holosene.github.io/Portfolio/).
+Un Worker Cloudflare (`cloudflare/holosene-worker/`) le sert sous https://holosene.fr/ : la page HOLOSENE à la racine,
+le portfolio dans `/portfolio/`, et chaque projet dans `/portfolio/<nom>/`, relayé depuis son propre dépôt.
+`.github/workflows/ci.yml` vérifie que le site se compile.
+
+</details>
