@@ -5,11 +5,10 @@
  *   low  : toile WebGL à 1 pixel par pixel CSS, sans fond animé (fond uni du thème, comme sans WebGL).
  * `?q=low|mid|high` dans l'adresse force le niveau (essais, comparaisons).
  *
- * Choix automatique selon l'appareil (GPU logiciel ou d'entrée de gamme, peu de mémoire ou de cœurs, économie de
- * données) : prêt, mais pas encore appliqué (AUTO = false). Il change le rendu sur les appareils faibles : il attend
- * l'accord de Johann (PERF-2026-11-24.md). En attendant, sans `?q=`, tout le monde a « high », comme avant.
+ * Sans `?q=`, choix automatique selon l'appareil : GPU logiciel ou d'entrée de gamme, peu de mémoire ou de cœurs,
+ * économie de données. Les appareils courants (ordinateurs récents, iPhone) restent en « high ».
  */
-const AUTO = false
+const AUTO = true   // accord de Johann, 25/11/2026
 
 const LEVELS = {
   high: { name: 'high', maxDpr: Infinity, backdrop: true },
@@ -39,7 +38,8 @@ export function autoLevel() {
   if (WEAK_GPU.test(gpu)) return 'low'
   const mem = nav.deviceMemory, cores = nav.hardwareConcurrency
   if ((mem && mem <= 2) || (cores && cores <= 2)) return 'low'
-  if ((mem && mem <= 4) || (cores && cores <= 4)) return 'mid'
+  // mémoire connue seulement sous Chrome / Android ; le nombre de cœurs seul ne suffit pas (Safari le plafonne)
+  if (mem && mem <= 4) return 'mid'
   return 'high'
 }
 
