@@ -13,7 +13,10 @@
 /* lettrage à l'encre (ink-word.js) : la toile déborde du mot (renflement) ; le SVG reste en place, transparent */
 .holo__ink { position: absolute; left: -2%; top: -6%; width: 104%; height: 112%; pointer-events: none; }
 .holo__title.ink-on .logotype, .holo__title.ink-wait .logotype { opacity: 0; }   /* rien avant l'encre : pas d'image intermédiaire */
-.holo__late { transition: opacity 0.7s ease, transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1); }
+/* le mot apparaît en fondu (encre, ou SVG de repli sans WebGL 2), puis le reste un peu après */
+@keyframes holo-fondu { from { opacity: 0; } to { opacity: 1; } }
+.holo__title.ink-on .holo__ink, .holo__title:not(.ink-on):not(.ink-wait) .logotype { animation: holo-fondu 0.9s ease both; }
+.holo__late { transition: opacity 0.7s ease 0.55s, transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) 0.55s; }
 .holo__foot { position: absolute; left: 0; right: 0; bottom: 0; z-index: 1; width: 100%; box-sizing: border-box; }
 /* pied de page du portfolio : © à gauche, contact au centre (à la place du nom), mentions légales à droite */
 @media (min-width: 761px) { .holo__foot > a.holo__mail { grid-column: 2; grid-row: 1; justify-self: center; } }
