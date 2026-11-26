@@ -24,7 +24,7 @@ import { TRACE as mTrace } from './monogram-trace.js'
 // shape : contour net (groupe .mot du SVG de la page), redessiné à la taille de l'écran ; sans shape : l'image de la page
 // elle-même (monogram-shape.svg : forme assez fine pour être réduite)
 export const INK_ART = {
-  holosene: { map: hMap, along: hAlong, bake: hBake, trace: hTrace, dur: 1500, shape: (svg) => svg.querySelector('.mot').outerHTML },
+  holosene: { map: hMap, along: hAlong, bake: hBake, trace: hTrace, dur: 1100, shape: (svg) => svg.querySelector('.mot').outerHTML },
   monogram: { map: mMap, along: mAlong, bake: mBake, trace: mTrace, dur: 1000, bakeS: 3 },
 }
 const M = 40, RES = 1, BAKE_S = 1.5

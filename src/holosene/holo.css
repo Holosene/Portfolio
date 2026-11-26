@@ -17,8 +17,8 @@
 .holo__foot { position: absolute; left: 0; right: 0; bottom: 0; z-index: 1; width: 100%; box-sizing: border-box; }
 /* pied de page du portfolio : © à gauche, contact au centre (à la place du nom), mentions légales à droite */
 @media (min-width: 761px) { .holo__foot > a.holo__mail { grid-column: 2; grid-row: 1; justify-self: center; } }
-/* liens sous le mot : Portfolio, CV, GitHub, sur une ligne (retour à la ligne centré sur petit écran) */
-.holo__links { display: flex; flex-wrap: wrap; justify-content: center; gap: 0 clamp(18px, 3vw, 40px); }
+/* liens sous le mot : Portfolio, CV, GitHub, l'un sous l'autre, centrés */
+.holo__links { display: flex; flex-direction: column; align-items: center; gap: 2px; }
 .holo__link { font: 600 clamp(13px, 1.4vw, 15px)/1 var(--font-text); letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink); text-decoration: none; padding: 10px 4px; }
 .holo__link:hover, .holo__link:focus-visible { text-decoration: underline; text-underline-offset: 4px; }
 .trace-wait .holo__late { opacity: 0; transform: translateY(6px); pointer-events: none; }   /* après le tracé du mot */
