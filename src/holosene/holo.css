@@ -3,7 +3,7 @@
 .holo { position: relative; min-height: 100svh; }
 .holo__main {
   position: relative; z-index: 1; box-sizing: border-box; min-height: 100svh;
-  display: grid; grid-template-rows: 1fr auto 1fr; justify-items: center;
+  display: grid; grid-template-rows: minmax(0, 1fr) auto minmax(0, 1fr); justify-items: center;   /* minmax(0) : les liens ne décalent jamais le mot */
   padding: clamp(72px, 12vh, 120px) 16px;   /* mêmes marges en haut et en bas : le mot au centre exact */
 }
 .holo__main > .holo__title { grid-row: 2; }
@@ -20,6 +20,10 @@
 /* liens sous le mot : Portfolio, CV, GitHub, l'un sous l'autre, centrés */
 .holo__links { display: flex; flex-direction: column; align-items: center; gap: 2px; }
 .holo__link { font: 600 clamp(13px, 1.4vw, 15px)/1 var(--font-text); letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink); text-decoration: none; padding: 10px 4px; }
+@media (max-height: 700px) { .holo__links { gap: 0; } .holo__link { padding: 6px 4px; } }
+@media (max-height: 600px) { .holo__main > .holo__links { margin-top: 6px; } }
+/* téléphone à l'horizontale : le mot reste au centre de l'écran, le pied de page passe dessous (on défile pour le voir) */
+@media (max-height: 450px) { .holo__main { padding: 24px 16px; } .holo__foot { position: static; } }   /* écrans bas : les liens restent au-dessus du pied de page */
 .holo__link:hover, .holo__link:focus-visible { text-decoration: underline; text-underline-offset: 4px; }
 .trace-wait .holo__late { opacity: 0; transform: translateY(6px); pointer-events: none; }   /* après le tracé du mot */
 @media (prefers-reduced-motion: reduce) { .holo__late { transition: none; } .trace-wait .holo__late { transform: none; } }
