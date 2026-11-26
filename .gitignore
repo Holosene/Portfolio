@@ -7,3 +7,14 @@ dist-site
 
 # mesures locales (sauvegardes, captures, résultats bruts du banc)
 work/
+
+# Internal notes and tooling (kept locally, not published)
+CLAUDE.md
+PROMPT-*.md
+PROMPT_*.md
+REPRISE*.md
+AUDIT-*.md
+PERF-*.md
+RAPPORT*.md
+vercel.json
+*.command
