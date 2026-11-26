@@ -100,7 +100,7 @@ async function rec(page, cdp, fn, prof = '') {
   const span = (m1.Timestamp - m0.Timestamp) || 1
   return {
     frames: fr.length, drawnFrames: drawn.length,
-    frameMs: { p50: r2(q(ms, 0.5)), p95: r2(q(ms, 0.95)), max: r2(Math.max(0, ...ms)) },
+    frameMs: { mean: r2(ms.reduce((a, b) => a + b, 0) / Math.max(1, ms.length)), p50: r2(q(ms, 0.5)), p95: r2(q(ms, 0.95)), max: r2(Math.max(0, ...ms)) },
     drawnMs: { p50: r2(q(drawn, 0.5)), p95: r2(q(drawn, 0.95)) },
     intervalMs: { p50: r2(q(iv, 0.5)), p95: r2(q(iv, 0.95)), over20: iv.filter((x) => x > 20).length },
     // fil principal, en ms par seconde : scripts, styles, mise en page
@@ -180,7 +180,9 @@ if (!ONLY || ONLY === 'effects') {
     'sans flous CSS des mots (filter: blur)': { css: '.w{filter:none!important}' },
     'sans backdrop-filter (barre, bandes)': { css: '*{backdrop-filter:none!important;-webkit-backdrop-filter:none!important}' },
   }
+  const PICK = (process.env.BENCH_VARIANTS || '').split(',').filter(Boolean)   // ex. BENCH_VARIANTS=tout,sans fond
   for (const [name, opt] of Object.entries(variants)) {
+    if (PICK.length && !PICK.some((v) => name.startsWith(v))) continue
     const runs = []
     for (let k = 0; k < RUNS; k++) {
       const { ctx, page, cdp } = await open(BASE + '?muet', opt)
@@ -194,7 +196,7 @@ if (!ONLY || ONLY === 'effects') {
     }
     const pick = (sc, f) => r2(median(runs.map((r) => f(r[sc]))))
     result.effects[name] = Object.fromEntries(['idle', 'scroll', 'hover'].map((sc) => [sc, {
-      frameP50: pick(sc, (x) => x.frameMs.p50), frameP95: pick(sc, (x) => x.frameMs.p95), drawnP50: pick(sc, (x) => x.drawnMs.p50),
+      frameMean: pick(sc, (x) => x.frameMs.mean), frameP50: pick(sc, (x) => x.frameMs.p50), frameP95: pick(sc, (x) => x.frameMs.p95), drawnP50: pick(sc, (x) => x.drawnMs.p50),
       intervalP95: pick(sc, (x) => x.intervalMs.p95), slow: pick(sc, (x) => x.intervalMs.over20),
       scriptPerSec: pick(sc, (x) => x.mainPerSec.script), stylePerSec: pick(sc, (x) => x.mainPerSec.style), layoutPerSec: pick(sc, (x) => x.mainPerSec.layout), layoutsPerSec: pick(sc, (x) => x.mainPerSec.layouts),
     }]))

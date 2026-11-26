@@ -145,6 +145,7 @@ export function createBackdrop(canvas, { reduced }) {
   }
 
   // contexte perdu : repli sur le fond uni du thème (comme sans WebGL), copies des bandes retirées
+  let lastSY = -1, lastVeil = -1, skip = false
   let lost = false
   canvas.addEventListener('webglcontextlost', () => {
     lost = true; canvas.style.display = 'none'
@@ -202,6 +203,12 @@ export function createBackdrop(canvas, { reduced }) {
       const k = wash.a < 0.02 ? 1 : 1 - Math.exp(-dt / 0.25)
       wash.rgb = wash.rgb.map((v, c) => v + (FLOW.hoverRGB[c] - v) * k)
     }
+    // au repos (ni curseur, ni survol du « o », ni défilement, voile fixe) : une image sur deux seulement. La dérive des
+    // formes avance de moins d'un pixel par image : 30 images/s ne se distinguent pas (accord de Johann, 25/11/2026).
+    // Tout l'état ci-dessus continue d'avancer à chaque image ; seul le dessin est sauté.
+    const sy0 = scrollY, still = ptr.a < 0.01 && wash.a < 0.01 && sy0 === lastSY && veil === lastVeil
+    lastSY = sy0; lastVeil = veil
+    if (still && (skip = !skip)) return
     gl.uniform3f(U.uWash, FLOW.hoverX, FLOW.hoverY, wash.a); gl.uniform3f(U.uWashCol, ...wash.rgb)
     gl.uniform3f(U.uPtr, ptr.x, ptr.y, ptr.a); gl.uniform1f(U.uPtrHue, hue); gl.uniform4fv(U.uB, B); gl.uniform1fv(U.uA, A)
     // formes du fond partagées avec les zones floues (vignettes WebGL, bandes CSS) : leur teinte vient du fond, et défile avec lui
