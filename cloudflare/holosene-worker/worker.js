@@ -9,6 +9,10 @@
  * Publication : « Publier holosene.fr.command » (wrangler deploy).
  */
 const GH = 'https://johann-ar.github.io'
+// 26/11 : échange des noms de comptes GitHub (Johann-Ar → holosene). Pendant la transition, si l'ancienne adresse répond
+// 404 (compte déjà renommé), on essaie la nouvelle. L'ancienne est essayée d'abord : avant le renommage, holosene.github.io
+// sert encore les vieilles copies de l'ancien compte Holosene. Une fois le renommage fait : GH = GH_NOUVEAU, GH_NOUVEAU = null.
+const GH_NOUVEAU = 'https://holosene.github.io'
 // 24/11 : sites servis ailleurs que sur GitHub Pages, au même chemin des deux côtés (chemin → origine)
 const AILLEURS = { 'utsubo-coverletter': 'https://lettre-utsubo.pages.dev' }
 const PROJETS = {
@@ -51,7 +55,12 @@ export default {
 
     const headers = new Headers()
     for (const h of PASS) if (request.headers.has(h)) headers.set(h, request.headers.get(h))
-    const res = await fetch(origine + from + rest + url.search, { method: request.method, headers, redirect: 'manual' })
+    const surGH = origine === GH
+    let res = await fetch(origine + from + rest + url.search, { method: request.method, headers, redirect: 'manual' })
+    if (surGH && GH_NOUVEAU && res.status === 404) {
+      const res2 = await fetch(GH_NOUVEAU + from + rest + url.search, { method: request.method, headers, redirect: 'manual' })
+      if (res2.status !== 404) res = res2, origine = GH_NOUVEAU
+    }
 
     const out = new Response(res.body, res)
     // redirections de GitHub (dossier sans « / » final…) : ramenées sous holosene.fr
@@ -68,6 +77,16 @@ export default {
     // fichiers versionnés par Vite (nom suivi d'une empreinte, ex. main-HE6pYvvQ.js) : leur contenu ne change jamais, le
     // navigateur les garde un an sans redemander (GitHub Pages n'envoie que 10 min). Le reste garde l'en-tête d'origine.
     if (res.status === 200 && /\/assets\/[^/]+-[\w-]{8}\.[a-z0-9]+$/i.test(url.pathname)) out.headers.set('cache-control', 'public, max-age=31536000, immutable')
+    // page HOLOSENE et portfolio (pas les sites de projets ni la lettre, qui ont leurs propres besoins) : en-têtes de
+    // sécurité de l'ancien vercel.json (perdus au passage sur GitHub Pages) et cache des médias d'une semaine
+    const site = surGH && from === '/Portfolio/'
+    if (site) {
+      out.headers.set('x-frame-options', 'DENY')
+      out.headers.set('content-security-policy', "frame-ancestors 'none'")
+      out.headers.set('permissions-policy', 'camera=(), microphone=(), geolocation=(), payment=(), usb=(), browsing-topics=()')
+      out.headers.set('cross-origin-opener-policy', 'same-origin')
+      if (res.status === 200 && /^\/portfolio\/(media|logotypes|icons)\//.test(url.pathname)) out.headers.set('cache-control', 'public, max-age=604800, stale-while-revalidate=86400')
+    }
     return out
   },
 }
